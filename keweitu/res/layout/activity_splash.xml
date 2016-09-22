@@ -1,0 +1,56 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_splash"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+   	android:background="@drawable/splash_1024"
+    tools:context="com.kvlyang.keweitu.Activity.SplashActivity" >
+<!--android:background="#FA64BE"  -->
+
+    <TextView
+        android:id="@+id/tv_splash_version_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/title"
+        android:textColor="#90C653"
+        android:textSize="40sp"
+        android:textStyle="italic"
+        android:typeface="serif" />
+
+    <ProgressBar
+        android:id="@+id/pb_splash_load"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:layout_below="@+id/tv_splash_version_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="6dp" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tv_splash_version_name"
+        android:layout_alignLeft="@+id/pb_splash_load"
+        android:layout_marginLeft="14dp"
+        android:text="广告轮播" />
+
+    <Button
+        android:id="@+id/Button02"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button1"
+        android:layout_alignLeft="@+id/button1"
+        android:text="优酷菜单" />
+
+    <Button
+        android:id="@+id/Button03"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/Button02"
+        android:layout_alignLeft="@+id/Button02"
+        android:text="xxx" />
+
+</RelativeLayout>

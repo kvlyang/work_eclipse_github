@@ -1,0 +1,33 @@
+package com.itheima.googleplay_8.holder;
+
+import android.view.View;
+
+import com.itheima.googleplay_8.R;
+import com.itheima.googleplay_8.base.BaseHolder;
+import com.itheima.googleplay_8.utils.UIUtils;
+
+/**
+ * @author  Administrator
+ * @time 	2015-7-20 下午4:18:10
+ * @des	TODO
+ *
+ * @version $Rev$
+ * @updateAuthor $Author$
+ * @updateDate $Date$
+ * @updateDes TODO
+ */
+public class MenuHolder extends BaseHolder<Object> {
+
+	@Override
+	public View initHolderView() {
+		View view = View.inflate(UIUtils.getContext(), R.layout.menu_view, null);
+		return view;
+	}
+
+	@Override
+	public void refreshHolderView(Object data) {
+		// TODO
+		
+	}
+
+}

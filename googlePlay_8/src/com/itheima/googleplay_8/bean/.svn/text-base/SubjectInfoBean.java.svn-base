@@ -1,0 +1,16 @@
+package com.itheima.googleplay_8.bean;
+
+/**
+ * @author  Administrator
+ * @time 	2015-7-18 上午11:05:27
+ * @des	TODO
+ *
+ * @version $Rev$
+ * @updateAuthor $Author$
+ * @updateDate $Date$
+ * @updateDes TODO
+ */
+public class SubjectInfoBean {
+	public String	des;	// 专题描述
+	public String	url;	// 专题的url
+}

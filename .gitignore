@@ -43,7 +43,7 @@ Temporary Items
 .apdisk
 
 *.class
-bin\
-gen\
-.settings\
+bin/
+gen/
+.settings/
 proguard

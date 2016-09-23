@@ -4,12 +4,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
  >
-
-    <com.astuetz.PagerSlidingTabStrip
+ <LinearLayout 
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:paddingLeft="24dp"
+     android:paddingRight="24dp"
+     android:paddingBottom="6dp"
+     android:paddingTop="66dp"
+     android:orientation="vertical"
+     android:background="#00A9DD">
+     
+     <com.astuetz.PagerSlidingTabStripExtends
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+    
         android:id="@+id/main_ac_tabs"
         android:layout_width="match_parent"
-        android:layout_height="48dp" >
-    </com.astuetz.PagerSlidingTabStrip>
+        android:layout_height="48dp"
+        app:pstsIndicatorColor = "#FFFFFF"
+        app:pstsIndicatorHeight = "4dp"
+        app:pstsUnderlineColor = "#FFFEFF"
+        app:pstsDividerColor = "#76ABD5"
+        app:pstsTabTextSize = "13sp"
+        app:pstsSelectedTabTextSize = "16sp"
+        app:pstsTabTextColor = "@color/tab_text_normal"
+        app:pstsSelectedTabTextColor = "@color/tab_text_selected"
+         >
+    </com.astuetz.PagerSlidingTabStripExtends>
+    "
+ </LinearLayout>
+
+   
 
     <android.support.v4.view.ViewPager
         android:id="@+id/main_ac_viewpager"

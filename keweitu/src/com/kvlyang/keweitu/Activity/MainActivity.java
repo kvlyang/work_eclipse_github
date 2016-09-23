@@ -1,15 +1,20 @@
 package com.kvlyang.keweitu.Activity;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.astuetz.PagerSlidingTabStripExtends;
 import com.kvlyang.keweitu.R;
+import com.kvlyang.keweitu.factory.FragmentFactory;
 import com.kvlyang.keweitu.utils.UIUtils;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-//import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +23,7 @@ import android.widget.TextView;
 public class MainActivity extends ActionBarActivity {
 
 	private ViewPager viewPager;
-	private PagerSlidingTabStrip tabs;
+	private PagerSlidingTabStripExtends tabs;
 	private String[] mMainTitles;
 
 	@Override
@@ -32,12 +37,14 @@ public class MainActivity extends ActionBarActivity {
 
 	private void initData() {
 		mMainTitles = UIUtils.getStringArray(R.array.main_titles);
-		viewPager.setAdapter(new HomeAdapter());
+		//MainFragmentPagerAdapter adapter = new MainFragmentPagerAdapter(getSupportFragmentManager());
+		MainFragmentStatePagerAdapter adapter = new MainFragmentStatePagerAdapter(getSupportFragmentManager());
+		viewPager.setAdapter(adapter);
 		tabs.setViewPager(viewPager);
 	}
 
 	private void initView() {
-		tabs = (PagerSlidingTabStrip) findViewById(R.id.main_ac_tabs);
+		tabs = (PagerSlidingTabStripExtends) findViewById(R.id.main_ac_tabs);
 		viewPager = (ViewPager) findViewById(R.id.main_ac_viewpager);
 	}
 
@@ -79,6 +86,62 @@ public class MainActivity extends ActionBarActivity {
 		@Override
 		public void destroyItem(ViewGroup container, int position, Object object) {
 			container.removeView((View) object);
+		}
+		
+		@Override
+		public CharSequence getPageTitle(int position) {
+			return mMainTitles[position];
+		}
+		
+	}
+	
+	class MainFragmentPagerAdapter extends FragmentPagerAdapter{
+
+		public MainFragmentPagerAdapter(FragmentManager fm) {
+			super(fm);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			Fragment fragment = FragmentFactory.getFragment(position);
+			return fragment;
+		}
+
+		@Override
+		public int getCount() {
+			if(mMainTitles!=null){
+				return mMainTitles.length;
+			}
+			return 0;
+		}
+		
+		@Override
+		public CharSequence getPageTitle(int position) {
+			return mMainTitles[position];
+		}
+		
+	}
+	
+	class MainFragmentStatePagerAdapter extends FragmentStatePagerAdapter{
+
+		public MainFragmentStatePagerAdapter(FragmentManager fm) {
+			super(fm);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			Fragment fragment = FragmentFactory.getFragment(position);
+			return fragment;
+		}
+
+		@Override
+		public int getCount() {
+			if(mMainTitles!=null){
+				return mMainTitles.length;
+			}
+			return 0;
 		}
 		
 		@Override

@@ -84,14 +84,16 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 	private int							dividerPadding			= 12;
 	private int							tabPadding				= 24;
 	private int							dividerWidth			= 1;
-
+	/* yang 20160923 */
 	private int							tabTextSize				= 12;
 	private int							tabTextColor			= 0xFF666666;
-	
-	
+	private int							selectedTabTextColor			= 0xFF666666;
+	private int							selectedTabTextSize			= 12;
+
+	/*�޸� yang 20160923 */
 	private Typeface					tabTypeface				= null;
 	private int							tabTypefaceStyle		= Typeface.BOLD;
-
+	
 	private int							lastScrollX				= 0;
 
 	private int							tabBackgroundResId		= R.drawable.background_tab;

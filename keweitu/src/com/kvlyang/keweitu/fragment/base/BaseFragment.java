@@ -18,25 +18,26 @@ import android.view.ViewGroup;
 public abstract class BaseFragment extends Fragment {
 	LoadingPager loadingPager;
 
-	
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		loadingPager = new LoadingPager(UIUtils.getContext()) {
+		if(loadingPager == null){
+			loadingPager = new LoadingPager(UIUtils.getContext()) {
 
-			@Override
-			public LoadedResult initData() {
-				return BaseFragment.this.initData();
-			}
+				@Override
+				public LoadedResult initData() {
+					return BaseFragment.this.initData();
+				}
 
-			@Override
-			public View initSuccessView() {
-				return BaseFragment.this.initSuccessView();
-			}
-		};
+				@Override
+				public View initSuccessView() {
+					return BaseFragment.this.initSuccessView();
+				}
+			};
 
-		loadingPager.loadData();
+		}else{
+			((ViewGroup)loadingPager.getParent()).removeView(loadingPager);
+		}
 		return loadingPager;
 	}
 

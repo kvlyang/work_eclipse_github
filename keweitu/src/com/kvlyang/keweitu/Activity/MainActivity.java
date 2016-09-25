@@ -24,6 +24,7 @@ import android.widget.TextView;
 public class MainActivity extends ActionBarActivity {
 
 	private ViewPager viewPager;
+	private int cachePagers = 3;
 	private PagerSlidingTabStripExtends tabs;
 	private String[] mMainTitles;
 
@@ -34,6 +35,7 @@ public class MainActivity extends ActionBarActivity {
 		initView();
 		initActionBar();
 		initData();
+		initListener();
 	}
 
 	private void initData() {
@@ -41,6 +43,7 @@ public class MainActivity extends ActionBarActivity {
 		//MainFragmentPagerAdapter adapter = new MainFragmentPagerAdapter(getSupportFragmentManager());
 		MainFragmentStatePagerAdapter adapter = new MainFragmentStatePagerAdapter(getSupportFragmentManager());
 		viewPager.setAdapter(adapter);
+		viewPager.setOffscreenPageLimit(cachePagers);
 		tabs.setViewPager(viewPager);
 	}
 
@@ -61,6 +64,9 @@ public class MainActivity extends ActionBarActivity {
 			@Override
 			public void onPageSelected(int position) {
 				BaseFragment fragment = (BaseFragment) FragmentFactory.getFragment(position);
+				if(fragment != null){
+					fragment.getLoadingPager().loadData();
+				}
 				
 			}
 			
@@ -143,6 +149,11 @@ public class MainActivity extends ActionBarActivity {
 		@Override
 		public CharSequence getPageTitle(int position) {
 			return mMainTitles[position];
+		}
+		
+		@Override
+		public int getItemPosition(Object object) {
+		return super.getItemPosition(object);
 		}
 		
 	}

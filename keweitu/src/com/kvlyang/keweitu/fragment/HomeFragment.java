@@ -12,7 +12,7 @@ import com.kvlyang.keweitu.utils.UIUtils;
 
 
 public class HomeFragment extends BaseFragment {
-
+	
 	@Override
 	protected LoadedResult initData() {
 		SystemClock.sleep(500);

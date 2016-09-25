@@ -28,12 +28,15 @@ public abstract class LoadingPager extends FrameLayout {
 	private View successView;
 	boolean successViewFlag = false; //数据界面是否已加载到frame容器
 	
+	boolean LoadRule = true;//强制更新
+	
 	public LoadingPager(Context context) {
 		super(context);
 		initCommonView();
 	}
 
 	private void initCommonView() {
+		Log.e("keweituBug", "initCommonView()");
 		loadingView = View.inflate(UIUtils.getContext(),
 				R.layout.pager_loading, null);
 		this.addView(loadingView, 0);
@@ -48,7 +51,7 @@ public abstract class LoadingPager extends FrameLayout {
 	}
 
 	private void refreshUI() {
-		
+		Log.e("keweituBug", "refreshUI()");
 		if(successView !=null ){	//优先显示历史信息 History Info
 			if(currentState == STATE_FORCED_UPDATE){//强制刷新view
 				View tempView = initSuccessView(); 
@@ -152,14 +155,49 @@ public abstract class LoadingPager extends FrameLayout {
 	}
 
 	public void loadData() {
+		currentState = STATE_LOADING;
+		refreshUI();
 		new Thread(new LoadDataTask()).start();
+	}
+	
+	//强制更新succeView
+	public void loadDataForce() {
+		currentState = STATE_LOADING;
+		refreshUI();
+		new Thread(new LoadDataTaskForce()).start();
 	}
 
 	class LoadDataTask implements Runnable {
-
+		//如果succesView已有数据显示，后台则不执行initData（节省流量）
 		@Override
 		public void run() {
+			Log.e("keweituBug", "LoadDataTask ");
+			if(currentState == STATE_UPDATE || currentState == STATE_FORCED_UPDATE){
+				return;
+			}
 			LoadedResult state = initData();
+			currentState = state.getState();
+			UIUtils.postUiTaskSafely(new Runnable() {
+
+				@Override
+				public void run() {
+					refreshUI();
+				}
+			});
+		}
+
+	}
+	
+	class LoadDataTaskForce implements Runnable {
+		//一直执行initData获取最近数据，并强制更新successView（适合应用强行更新网络数据）
+		@Override
+		public void run() {
+			Log.e("keweituBug", "LoadDataTaskForce ");
+			LoadedResult state = initData();
+			//强制更新succeView
+			if(state == LoadedResult.UPDATE){
+				state =LoadedResult.UPDATE_F;
+			}
 			currentState = state.getState();
 			UIUtils.postUiTaskSafely(new Runnable() {
 

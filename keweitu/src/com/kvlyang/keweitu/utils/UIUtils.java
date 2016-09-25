@@ -2,6 +2,7 @@ package com.kvlyang.keweitu.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Handler;
 
 import com.kvlyang.keweitu.init.StartApplication;
 
@@ -28,6 +29,21 @@ public class UIUtils {
 
 	public static String getPackageName() {
 		return getContext().getPackageName();
+	}
+	
+	public static long getMainThreadId(){
+		return StartApplication.getMainThreadId();
+	}
+	
+	public static Handler getMainThreadHandler(){
+		return StartApplication.getMainHandler();
+	}
+	public static void postUiTaskSafely(Runnable tast){
+		if( getMainThreadId() == android.os.Process.myTid()){
+			tast.run();
+		}else{
+			getMainThreadHandler().post(tast);
+		}
 	}
 	
 }

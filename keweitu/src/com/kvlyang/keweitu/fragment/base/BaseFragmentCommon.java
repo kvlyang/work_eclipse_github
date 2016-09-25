@@ -1,4 +1,4 @@
-package com.kvlyang.keweitu.fragment;
+package com.kvlyang.keweitu.fragment.base;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

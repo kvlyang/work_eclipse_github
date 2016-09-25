@@ -1,9 +1,17 @@
 package com.kvlyang.keweitu.fragment.factory;
 
+import javax.security.auth.Subject;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.util.SparseArrayCompat;
 
+import com.kvlyang.keweitu.fragment.AppFragment;
+import com.kvlyang.keweitu.fragment.CategoryFragment;
+import com.kvlyang.keweitu.fragment.GameFragment;
 import com.kvlyang.keweitu.fragment.HomeFragment;
+import com.kvlyang.keweitu.fragment.HotFragment;
+import com.kvlyang.keweitu.fragment.RecommentFragment;
+import com.kvlyang.keweitu.fragment.SubjectFragment;
 
 
 public class FragmentFactory {
@@ -36,27 +44,27 @@ public class FragmentFactory {
 			fragment = new HomeFragment();
 			break;
 		case FRAGMENT_APP:
-			fragment = new HomeFragment();
+			fragment = new AppFragment();
 
 			break;
 		case FRAGMENT_GAME:
-			fragment = new HomeFragment();
+			fragment = new GameFragment();
 
 			break;
 		case FRAGMENT_SUBJECT:
-			fragment = new HomeFragment();
+			fragment = new SubjectFragment();
 
 			break;
 		case FRAGMENT_RECOMMENT:
-			fragment = new HomeFragment();
+			fragment = new RecommentFragment();
 
 			break;
 		case FRAGMENT_CATEGORY:
-			fragment = new HomeFragment();
+			fragment = new CategoryFragment();
 
 			break;
 		case FRAGMENT_HOT:
-			fragment = new HomeFragment();
+			fragment = new HotFragment();
 
 			break;
 		default:

@@ -2,6 +2,7 @@ package com.kvlyang.keweitu.Activity;
 
 import com.astuetz.PagerSlidingTabStripExtends;
 import com.kvlyang.keweitu.R;
+import com.kvlyang.keweitu.fragment.base.BaseFragment;
 import com.kvlyang.keweitu.fragment.factory.FragmentFactory;
 import com.kvlyang.keweitu.utils.UIUtils;
 
@@ -12,6 +13,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -51,6 +53,29 @@ public class MainActivity extends ActionBarActivity {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setLogo(R.drawable.ic_launcher);
 		actionBar.setTitle("GooglePlay");
+	}
+	
+	private void initListener(){
+		tabs.setOnPageChangeListener(new OnPageChangeListener() {
+			
+			@Override
+			public void onPageSelected(int position) {
+				BaseFragment fragment = (BaseFragment) FragmentFactory.getFragment(position);
+				
+			}
+			
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 	}
 
 	@Override

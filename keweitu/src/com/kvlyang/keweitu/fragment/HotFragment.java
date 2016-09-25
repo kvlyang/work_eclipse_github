@@ -11,18 +11,18 @@ import com.kvlyang.keweitu.utils.UIUtils;
 
 
 
-public class HomeFragment extends BaseFragment {
+public class HotFragment extends BaseFragment {
 
 	@Override
 	protected LoadedResult initData() {
-		SystemClock.sleep(500);
+		SystemClock.sleep(2000);
 		return LoadedResult.UPDATE_F;
 	}
  
 	@Override
 	protected View initSuccessView() {
 		ImageView iv = new ImageView(UIUtils.getContext());
-		iv.setImageDrawable(UIUtils.getResource().getDrawable(R.drawable.icon_2));
+		iv.setImageDrawable(UIUtils.getResource().getDrawable(R.drawable.icon_3));
 		return iv;
 	}
 

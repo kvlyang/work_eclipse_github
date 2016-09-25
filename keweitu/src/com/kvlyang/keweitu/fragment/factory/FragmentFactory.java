@@ -1,6 +1,7 @@
-package com.kvlyang.keweitu.factory;
+package com.kvlyang.keweitu.fragment.factory;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.util.SparseArrayCompat;
 
 import com.kvlyang.keweitu.fragment.HomeFragment;
 
@@ -19,9 +20,17 @@ public class FragmentFactory {
 	public static final int FRAGMENT_RECOMMENT = 4;
 	public static final int FRAGMENT_CATEGORY = 5;
 	public static final int FRAGMENT_HOT = 6;
+	private static SparseArrayCompat<Fragment> cachesFragment;
 
 	public static Fragment getFragment(int position) {
-		Fragment fragment = null;
+		if(cachesFragment == null){
+			cachesFragment = new SparseArrayCompat<Fragment>();
+		}
+
+		Fragment fragment = cachesFragment.get(position);
+		if(fragment != null){
+			return fragment;
+		}
 		switch (position) {
 		case FRAGMENT_HOME:
 			fragment = new HomeFragment();
@@ -54,6 +63,8 @@ public class FragmentFactory {
 			break;
 
 		}
+		
+		cachesFragment.put(position, fragment);
 		return fragment;
 	}
 }

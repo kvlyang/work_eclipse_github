@@ -1,9 +1,8 @@
 package com.kvlyang.keweitu.Activity;
 
-import com.astuetz.PagerSlidingTabStrip;
 import com.astuetz.PagerSlidingTabStripExtends;
 import com.kvlyang.keweitu.R;
-import com.kvlyang.keweitu.factory.FragmentFactory;
+import com.kvlyang.keweitu.fragment.factory.FragmentFactory;
 import com.kvlyang.keweitu.utils.UIUtils;
 
 import android.os.Bundle;

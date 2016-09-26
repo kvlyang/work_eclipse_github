@@ -15,13 +15,13 @@ public class HomeFragment extends BaseFragment {
 	
 	@Override
 	protected LoadedResult initDataFromCaches() {
-		SystemClock.sleep(500);
+		SystemClock.sleep(4000);
 		return LoadedResult.UPDATE;
 	}
 	
 	@Override
 	protected LoadedResult initDataFromHttp() {
-		//
+		SystemClock.sleep(8000);
 		return LoadedResult.UPDATE;
 	}
  

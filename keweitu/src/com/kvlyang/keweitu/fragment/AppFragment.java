@@ -28,7 +28,8 @@ public class AppFragment extends BaseFragment {
 
 	@Override
 	protected LoadedResult initDataFromHttp() {
-		return LoadedResult.UPDATE;
+		SystemClock.sleep(8000);
+		return LoadedResult.UPDATE_F;
 	}
 
 	

@@ -15,8 +15,8 @@ public class SubjectFragment extends BaseFragment {
 
 	@Override
 	protected LoadedResult initDataFromCaches() {
-		SystemClock.sleep(2000);
-		return LoadedResult.UPDATE_F;
+		SystemClock.sleep(4000);
+		return LoadedResult.UPDATE;
 	}
  
 	@Override
@@ -28,6 +28,7 @@ public class SubjectFragment extends BaseFragment {
 
 	@Override
 	protected LoadedResult initDataFromHttp() {
+		SystemClock.sleep(8000);
 		return LoadedResult.UPDATE;
 	}
 

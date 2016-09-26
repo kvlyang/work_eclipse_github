@@ -43,12 +43,13 @@ public abstract class BaseFragment extends Fragment {
 				}
 				
 			};
+			//初始化 预先从缓存读数据
+			loadingPager.loadDataCaches();
 
 		}else{
 			((ViewGroup)loadingPager.getParent()).removeView(loadingPager);
 		}
-		//初始化 预先从缓存读数据
-		loadingPager.loadDataCaches();
+		
 		return loadingPager;
 	}
 

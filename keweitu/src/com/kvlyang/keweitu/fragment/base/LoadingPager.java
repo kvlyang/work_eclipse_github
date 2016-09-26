@@ -116,11 +116,11 @@ public abstract class LoadingPager extends FrameLayout {
 				View tempView = initSuccessView();
 				if (tempView == null) { // 待更新界面解析出现异常					
 					int doSomethingFirstUpdateErr = 1;
-					if(currentState != STATE_FORCED_UPDATE){	
-						// 一般是第一次网络更新失败，并且缓存数据也为空时，处理：默认显示错误界面（可添加广告或错误提示）
+					if(currentState == STATE_FORCED_UPDATE){	
+						// 网络更新失败，并且缓存数据也为空时，处理：默认显示错误界面（可添加广告或错误提示）
 						doSomethingFirstUpdateErr = 1;
 					}else{
-						// 一般是第一次加载完成，发现缓存数据为空时，默认显示empty页，等后续网络更新结果 处理：
+						// 发现缓存数据为空时，默认显示empty页，等后续网络更新结果 处理：
 						doSomethingFirstUpdateErr = 0;
 					}
 					

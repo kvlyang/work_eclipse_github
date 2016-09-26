@@ -2,6 +2,7 @@ package com.kvlyang.keweitu.init;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Handler;
 import android.os.Looper;
 
 public class StartApplication extends Application {
@@ -10,6 +11,7 @@ public class StartApplication extends Application {
 	private static Thread mainThread;
 	private static Context context;
 	private static Looper mainLooper;
+	private static Handler mainHandler;
 
 	@Override
 	public void onCreate() { // main() 程序入口
@@ -18,7 +20,7 @@ public class StartApplication extends Application {
 		mainThread = Thread.currentThread();
 		mainThreadId = android.os.Process.myTid();
 		mainLooper = getMainLooper();
-		
+		mainHandler = new Handler(mainLooper);
 		super.onCreate();
 	}
 	
@@ -37,4 +39,10 @@ public class StartApplication extends Application {
 	public static Looper getMainThreadLooper() {
 		return mainLooper;
 	}
+
+	public static Handler getMainHandler() {
+		return mainHandler;
+	}
+
+	
 }

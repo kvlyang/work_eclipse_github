@@ -75,6 +75,8 @@ public class PagerSlidingTabStripExtends extends HorizontalScrollView {
 	private int							indicatorColor			= 0xFF666666;
 	private int							underlineColor			= 0x1A000000;
 	private int							dividerColor			= 0x1A000000;
+	private int							indexColor			= 0xFEDE184B;
+	
 
 	private boolean						shouldExpand			= false;
 	private boolean						textAllCaps				= true;
@@ -365,8 +367,23 @@ public class PagerSlidingTabStripExtends extends HorizontalScrollView {
 		}
 		// 绘制indicator
 
-		canvas.drawRect(lineLeft, height - indicatorHeight, lineRight, height, rectPaint);
-
+		//canvas.drawRect(lineLeft, height - indicatorHeight, lineRight, height, rectPaint);
+		for(int n = 0;n<2*tabCount-1;n++){
+			if(n%2 == 0){
+				float w = lineRight -lineLeft;
+				if(currentPosition == n/2){
+					rectPaint.setColor(indexColor);	
+					canvas.drawRect(lineLeft+w/5f+n*(w-w/2.5f)/(2*tabCount-1)-2,
+							height - indicatorHeight, lineLeft+w/5f+(n+1)*(w-w/2.5f)/(2*tabCount-1), height, rectPaint);
+				}else{
+					rectPaint.setColor(indicatorColor);
+					canvas.drawRect(lineLeft+w/5f+n*(w-w/2.5f)/(2*tabCount-1),
+							height - indicatorHeight, lineLeft+w/5f+(n+1)*(w-w/2.5f)/(2*tabCount-1), height, rectPaint);
+				}
+				
+			}
+		}
+		//canvas.drawRect(lineLeft+(lineRight-lineLeft)/3, height - indicatorHeight, lineRight-(lineRight-lineLeft)/3, height, rectPaint);
 		/*
 		x = (lineRight-lineLeft)/2+lineLeft
 		y = height - indicatorHeight
@@ -391,7 +408,7 @@ public class PagerSlidingTabStripExtends extends HorizontalScrollView {
 		// draw underline
 
 		rectPaint.setColor(underlineColor);
-		canvas.drawRect(0, height - underlineHeight, tabsContainer.getWidth(), height, rectPaint);
+	//	canvas.drawRect(0, height - underlineHeight, tabsContainer.getWidth(), height, rectPaint);
 
 		// draw divider
 

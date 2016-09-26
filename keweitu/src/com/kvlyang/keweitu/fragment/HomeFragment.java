@@ -14,9 +14,15 @@ import com.kvlyang.keweitu.utils.UIUtils;
 public class HomeFragment extends BaseFragment {
 	
 	@Override
-	protected LoadedResult initData() {
+	protected LoadedResult initDataFromCaches() {
 		SystemClock.sleep(500);
-		return LoadedResult.UPDATE_F;
+		return LoadedResult.UPDATE;
+	}
+	
+	@Override
+	protected LoadedResult initDataFromHttp() {
+		//
+		return LoadedResult.UPDATE;
 	}
  
 	@Override
@@ -25,6 +31,8 @@ public class HomeFragment extends BaseFragment {
 		iv.setImageDrawable(UIUtils.getResource().getDrawable(R.drawable.icon_2));
 		return iv;
 	}
+
+	
 
 	
 

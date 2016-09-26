@@ -17,6 +17,9 @@ import android.view.ViewGroup;
  成功页面*/
 public abstract class BaseFragment extends Fragment {
 	LoadingPager loadingPager;
+	public boolean httpDoneFirst = false; //判断是否尝试过一次网络更新
+	public boolean httpDoneFinish = false; //是否网络更新成功过
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -25,28 +28,39 @@ public abstract class BaseFragment extends Fragment {
 			loadingPager = new LoadingPager(UIUtils.getContext()) {
 
 				@Override
-				public LoadedResult initData() {
-					return BaseFragment.this.initData();
+				public LoadedResult initDataFromCaches() {
+					return BaseFragment.this.initDataFromCaches();
+				}
+				
+				@Override
+				public LoadedResult initDataFromHttp() {
+					return BaseFragment.this.initDataFromHttp();
 				}
 
 				@Override
 				public View initSuccessView() {
 					return BaseFragment.this.initSuccessView();
 				}
+				
 			};
 
 		}else{
 			((ViewGroup)loadingPager.getParent()).removeView(loadingPager);
 		}
+		//初始化 预先从缓存读数据
+		loadingPager.loadDataCaches();
 		return loadingPager;
 	}
 
+
 	protected abstract View initSuccessView();
 
-	protected abstract LoadedResult initData();
+	protected abstract LoadedResult initDataFromCaches();
+	protected abstract LoadedResult initDataFromHttp();
 	
 	public LoadingPager getLoadingPager() {
 		return loadingPager;
 	}
+	
 
 }

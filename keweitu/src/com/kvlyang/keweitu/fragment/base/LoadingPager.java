@@ -18,18 +18,21 @@ public abstract class LoadingPager extends FrameLayout {
 	public static final int STATE_LOADING = 0;
 	public static final int STATE_EMPTY = 1;
 	public static final int STATE_ERROR = 2;
-	public static final int STATE_FORCED_UPDATE = 3; //不管是否已有数据显示，强制更新
-	public static final int STATE_UPDATE = 4;//已有数据显示时，不会更新
-	
+	public static final int STATE_FORCED_UPDATE = 3; // 不管是否已有数据显示，强制更新
+	public static final int STATE_UPDATE = 4;// 已有数据显示时，不会更新
+	public static final int STATE_CACHE = 5;//当前界面有缓存数据
+
 	public int currentState = STATE_LOADING;
 	private View loadingView;
 	private View errorView;
 	private View emptyView;
 	private View successView;
-	boolean successViewFlag = false; //数据界面是否已加载到frame容器
+	boolean successViewFlag = false; // 数据界面是否已加载到frame容器
 	
-	boolean LoadRule = true;//强制更新
-	
+	public boolean httpDowning = false; //是否网络正在更新中(非线程安全)
+
+//	boolean LoadRule = true;// 强制更新
+
 	public LoadingPager(Context context) {
 		super(context);
 		initCommonView();
@@ -50,174 +53,272 @@ public abstract class LoadingPager extends FrameLayout {
 		refreshUI();
 	}
 
+	private void refreshUI(LoadedResult state) {
+		currentState = state.getState();// 使状态和界面更新在同一主线程执行
+		refreshUI();
+	}
+
 	private void refreshUI() {
 		Log.e("keweituBug", "refreshUI()");
-		if(successView !=null ){	//优先显示历史信息 History Info
-			if(currentState == STATE_FORCED_UPDATE){//强制刷新view
-				View tempView = initSuccessView(); 
-				if(tempView == null){	//待更新界面出现异常
-					//应该处理：显示错误界面（可添加广告或错误提示）
+		if (successView != null) { // 优先显示历史信息 History Info
+			if (currentState == STATE_FORCED_UPDATE) {// 强制刷新view
+				// 界面强制更新成功后更改状态，减少无意义的刷新判断
+				currentState = STATE_CACHE;
+				
+				View tempView = initSuccessView();
+				if (tempView == null) { // 更新界面出现异常
+					// 应该处理：默认显示错误界面（可添加广告或错误提示）
 					int doSomethingForcedUpdateErr = 1;
-					if(doSomethingForcedUpdateErr != 0){
+					if (doSomethingForcedUpdateErr != 0) {
 						currentState = STATE_ERROR;
-						//显示错误界面并删除掉数据view减少内存占用
+						// 显示错误界面并删除掉数据view
 						this.removeView(successView);
 						successView = null;
 						successViewFlag = false;
 					}
 					Log.e("keweituBug", "initSuccessView() is null");
-				}else{
+				} else {
 					this.removeView(successView);
 					successView = tempView;
 					this.addView(successView);
 					successViewFlag = true;
-					//界面强制更新成功后更改状态，减少无意义的刷新
-					currentState = STATE_UPDATE;
+					
 				}
-			}else if(currentState == STATE_UPDATE){
-				if(initSuccessView() == null){	//界面出现异常
-					//不做处理则显示原历史数据界面,只在log提示
-					int doSomethingUpdateErr = 0;
-					if(doSomethingUpdateErr != 0){
+			} else if (currentState == STATE_UPDATE) {
+				currentState = STATE_CACHE;
+				if (initSuccessView() == null) { // 界面出现异常
+					// 不做处理显示原缓存数据界面,只在log提示异常
+					/*int doSomethingUpdateErr = 0;
+					if (doSomethingUpdateErr != 0) {
 						currentState = STATE_ERROR;
 						this.removeView(successView);
 						successView = null;
 						successViewFlag = false;
-					}
+					}*/
 					Log.e("keweituBug", "initSuccessView() is null");
 				}
 			}
-			
-			if(!successViewFlag){ 
-				this.addView(successView);
-				successViewFlag = true;					
+
+			if (!successViewFlag) {
+				successViewFlag = true;
 			}
-			
-		}else{  //successView ==null 
-			if(successViewFlag){//发现不合逻辑的未知异常
+
+		} else { // successView ==null
+			if (successViewFlag) {// 发现不合逻辑的未知异常
 				successViewFlag = false;
-				Log.e("keweituBug", "successView is null;successViewFlag = true");
+				Log.e("keweituBug",
+						"successView is null;successViewFlag = true");
 			}
-			
-			if(currentState == STATE_FORCED_UPDATE || currentState == STATE_UPDATE){
-				//第一次更新界面
-				View tempView = initSuccessView(); 
-				if(tempView == null){	//待更新界面解析出现异常
-					//不做处理则可能一直显示空界面
-					//处理：显示错误界面（可添加广告或错误提示）
+
+			if (currentState == STATE_FORCED_UPDATE
+					|| currentState == STATE_UPDATE) {
+				// 第一次更新界面
+				View tempView = initSuccessView();
+				if (tempView == null) { // 待更新界面解析出现异常					
 					int doSomethingFirstUpdateErr = 1;
-					if(doSomethingFirstUpdateErr != 0){
+					if(currentState != STATE_FORCED_UPDATE){	
+						// 一般是第一次网络更新失败，并且缓存数据也为空时，处理：默认显示错误界面（可添加广告或错误提示）
+						doSomethingFirstUpdateErr = 1;
+					}else{
+						// 一般是第一次加载完成，发现缓存数据为空时，默认显示empty页，等后续网络更新结果 处理：
+						doSomethingFirstUpdateErr = 0;
+					}
+					
+					if (doSomethingFirstUpdateErr != 0) {
 						currentState = STATE_ERROR;
 						successView = null;
 						successViewFlag = false;
+					}else if(doSomethingFirstUpdateErr == 0){
+						currentState = STATE_EMPTY;
+						successView = null;
+						successViewFlag = false;
 					}
-					Log.e("keweituBug", "initSuccessView() is null when loading first");
-				}else{
+					Log.e("keweituBug",
+							"initSuccessView() is null when loading first");
+				} else {
 					successView = tempView;
 					this.addView(successView);
 					successViewFlag = true;
-					//界面强制更新成功后更改状态，减少无意义的刷新
-					currentState = STATE_UPDATE;
+					// 界面强制更新成功后更改状态，减少无意义的强制刷新判断
+					currentState = STATE_CACHE;
 				}
 			}
 		}
-		
-		//只要有数据view就显示数据页 
-		if(successViewFlag){ 
+
+		// 只要有数据view就显示数据页 STATE_CACHE
+		if (successViewFlag) {
+			currentState = STATE_CACHE;
 			successView.setVisibility(View.VISIBLE);
 			loadingView.setVisibility(View.GONE);
 			emptyView.setVisibility(View.GONE);
 			errorView.setVisibility(View.GONE);
 			return;
-		}else{
-			if(successView != null){
-				Log.e("keweituBug", "successView is not null;successViewFlag = false");
+		} else {
+			if (successView != null) {
+				Log.e("keweituBug",
+						"successView is not null;successViewFlag = false");
 			}
 		}
-		
-		if(currentState == STATE_LOADING){
+
+		if (currentState == STATE_LOADING) {
 			loadingView.setVisibility(View.VISIBLE);
-		}else{
+		} else {
 			loadingView.setVisibility(View.GONE);
 		}
-		if(currentState == STATE_EMPTY){
+		if (currentState == STATE_EMPTY) {
 			emptyView.setVisibility(View.VISIBLE);
-		}else{
+		} else {
 			emptyView.setVisibility(View.GONE);
 		}
-		if(currentState == STATE_ERROR){
+		if (currentState == STATE_ERROR) {
 			errorView.setVisibility(View.VISIBLE);
-		}else{
+		} else {
 			errorView.setVisibility(View.GONE);
 		}
-		
-		
+
 	}
 
-	public void loadData() {
-		currentState = STATE_LOADING;
-		refreshUI();
-		new Thread(new LoadDataTask()).start();
-	}
-	
-	//强制更新succeView
-	public void loadDataForce() {
-		currentState = STATE_LOADING;
-		refreshUI();
-		new Thread(new LoadDataTaskForce()).start();
+	// 先判断succeView是否已经存在数据，存在则不执行从本地缓存加载
+	public void loadDataCaches() {
+		if (currentState == STATE_UPDATE
+				|| currentState == STATE_FORCED_UPDATE||currentState == STATE_CACHE) {
+			return;
+		}else{
+			currentState = STATE_LOADING;//如果界面无数据，先显示loading页,表示正在加载缓存中
+			refreshUI();
+		}
+		new Thread(new LoadDataCachesTask()).start();
+
 	}
 
-	class LoadDataTask implements Runnable {
-		//如果succesView已有数据显示，后台则不执行initData（节省流量）
+	class LoadDataCachesTask implements Runnable {
 		@Override
 		public void run() {
 			Log.e("keweituBug", "LoadDataTask ");
-			if(currentState == STATE_UPDATE || currentState == STATE_FORCED_UPDATE){
-				return;
-			}
-			LoadedResult state = initData();
-			currentState = state.getState();
+			
+			
+			final LoadedResult state = initDataFromCaches();
 			UIUtils.postUiTaskSafely(new Runnable() {
 
 				@Override
 				public void run() {
-					refreshUI();
+					//如果无缓存数据，默认依然显示loading页，想显示空白页请在initDataFromCache中返回STATE_EMPTY
+					refreshUI(state);
 				}
 			});
 		}
 
 	}
-	
-	class LoadDataTaskForce implements Runnable {
-		//一直执行initData获取最近数据，并强制更新successView（适合应用强行更新网络数据）
+
+	// 不管succeView是否已经存在显示数据，从本地缓存加载并强制更新,无缓存则显示err页，一般情况应该用不到（频繁显示错误页，用户体验不好）
+	public void loadDataCachesForce() {	
+			currentState = STATE_LOADING;//如果界面无数据，先显示loading页,表示正在加载缓存中
+			refreshUI();
+		new Thread(new LoadDataCachesForceTask()).start();
+	}
+
+	class LoadDataCachesForceTask implements Runnable {
+
+		@Override
+		public void run() {
+			Log.e("keweituBug", "LoadDataCachesForceTask ");
+			initDataFromCaches();
+			//不管是否获得缓存数据，反正要强制更新successView界面，哪怕initSuccessView为null就显示err界面
+			final LoadedResult state = LoadedResult.UPDATE_F;
+
+			UIUtils.postUiTaskSafely(new Runnable() {
+
+				@Override
+				public void run() {
+					refreshUI(state);
+				}
+			});
+		}
+
+	}
+
+	/*
+	 * 从网路加载，根据返回值决定是否强制更新successView（适合应用更新网络数据，更新到缓存需自己实现） 
+	 * 
+	 */
+	public void loadDataHttp() {
+		if(httpDowning){
+			return; //不重复下载任务
+		}
+		httpDowning = true;
+		currentState = STATE_LOADING;//如果界面无数据，先显示loading页,表示正在获取网络数据
+		refreshUI();
+		new Thread(new LoadDataHttpTask()).start();
+	}
+
+	class LoadDataHttpTask implements Runnable {
+		// 执行initDataFromHttp获取最新数据，根据返结果决定是否要强制更新successView
 		@Override
 		public void run() {
 			Log.e("keweituBug", "LoadDataTaskForce ");
-			LoadedResult state = initData();
-			//强制更新succeView
-			if(state == LoadedResult.UPDATE){
-				state =LoadedResult.UPDATE_F;
-			}
-			currentState = state.getState();
+			//（如果网络更新失败，initSuccessView为null，最好返回STATE_ERROR无任何缓存时显示错误，而不是UPDATE_F）
+			//除非必须实时更新的显示页面，不推荐无新数据时UPDATE_F强制更新，在有缓存显示情况下，会取消缓存数据显示页
+			final LoadedResult state = initDataFromHttp();
+			/*
+			 * 强制更新succeView if(state == LoadedResult.UPDATE){ state
+			 * =LoadedResult.UPDATE_F; }
+			 */
 			UIUtils.postUiTaskSafely(new Runnable() {
 
 				@Override
 				public void run() {
-					refreshUI();
+					httpDowning = false;
+					if(state == null){
+						Log.e("keweituBug", "refreshUI(state) state is null ");
+					}
+					refreshUI(state);
 				}
 			});
 		}
 
 	}
 
-	public abstract LoadedResult initData();
+	// 从网路加载，强制更新successView（适合应用实时更新网络数据，只要有网络更新异常就显示错误页，而不是用缓存页掩盖，用户体验差）
+	public void loadDataHttpForce() {
+		if(httpDowning){
+			return; //不重复下载任务
+		}
+		httpDowning = true;
+		currentState = STATE_LOADING;
+		refreshUI();
+		new Thread(new LoadDataHttpForceTask()).start();
+	}
+
+	class LoadDataHttpForceTask implements Runnable {
+		// 执行initDataFromHttp获取最新数据，根据返结果决定是否要更新successView（如果网络更新失败，不需要更新view）
+		@Override
+		public void run() {
+			Log.e("keweituBug", "LoadDataTaskForce ");
+			initDataFromHttp();			
+			// 不管网络更新与否，强制更新succeView
+			final LoadedResult state = LoadedResult.UPDATE_F;
+
+			UIUtils.postUiTaskSafely(new Runnable() {
+
+				@Override
+				public void run() {
+					httpDowning = false;
+					refreshUI(state);
+				}
+			});
+		}
+
+	}
+
+	public abstract LoadedResult initDataFromCaches();
+
+	public abstract LoadedResult initDataFromHttp();
 
 	public abstract View initSuccessView();
 
 	public enum LoadedResult {
-		UPDATE_F(STATE_FORCED_UPDATE), UPDATE(STATE_UPDATE),
-		ERROR(STATE_ERROR), EMPTY(STATE_EMPTY), LOADING(
-				STATE_LOADING);
+		UPDATE_F(STATE_FORCED_UPDATE), UPDATE(STATE_UPDATE), ERROR(STATE_ERROR), EMPTY(
+				STATE_EMPTY), LOADING(STATE_LOADING);
 		int state;
 
 		public int getState() {

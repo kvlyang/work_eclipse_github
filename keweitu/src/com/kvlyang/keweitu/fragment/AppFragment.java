@@ -14,16 +14,21 @@ import com.kvlyang.keweitu.utils.UIUtils;
 public class AppFragment extends BaseFragment {
 
 	@Override
-	protected LoadedResult initData() {
+	protected LoadedResult initDataFromCaches() {
 		SystemClock.sleep(2000);
-		return LoadedResult.UPDATE_F;
+		return LoadedResult.UPDATE;
 	}
  
 	@Override
 	protected View initSuccessView() {
 		ImageView iv = new ImageView(UIUtils.getContext());
 		iv.setImageDrawable(UIUtils.getResource().getDrawable(R.drawable.icon_1));
-		return iv;
+		return null;
+	}
+
+	@Override
+	protected LoadedResult initDataFromHttp() {
+		return LoadedResult.UPDATE;
 	}
 
 	

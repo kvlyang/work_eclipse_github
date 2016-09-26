@@ -65,7 +65,17 @@ public class MainActivity extends ActionBarActivity {
 			public void onPageSelected(int position) {
 				BaseFragment fragment = (BaseFragment) FragmentFactory.getFragment(position);
 				if(fragment != null){
-					fragment.getLoadingPager().loadData();
+					//如果已经从网络更新过，不要再拉数据（节省流量）
+					if(!fragment.httpDoneFinish){
+						/*
+						 * 从网络更新数据，
+						 * 异常处理：
+						 * 如果缓存和网络都未获取到数据：
+						 * initSuccessView返回null，依据返回的state加载提示页
+						 */					
+						fragment.getLoadingPager().loadDataHttp();
+					}
+					
 				}
 				
 			}

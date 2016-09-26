@@ -14,7 +14,7 @@ import com.kvlyang.keweitu.utils.UIUtils;
 public class HotFragment extends BaseFragment {
 
 	@Override
-	protected LoadedResult initData() {
+	protected LoadedResult initDataFromCaches() {
 		SystemClock.sleep(2000);
 		return LoadedResult.UPDATE_F;
 	}
@@ -24,6 +24,11 @@ public class HotFragment extends BaseFragment {
 		ImageView iv = new ImageView(UIUtils.getContext());
 		iv.setImageDrawable(UIUtils.getResource().getDrawable(R.drawable.icon_3));
 		return iv;
+	}
+
+	@Override
+	protected LoadedResult initDataFromHttp() {
+		return LoadedResult.UPDATE;
 	}
 
 	

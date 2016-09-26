@@ -1,4 +1,4 @@
-package com.kvlyang.keweitu.fragment.factory;
+package com.kvlyang.keweitu.factory;
 
 import javax.security.auth.Subject;
 

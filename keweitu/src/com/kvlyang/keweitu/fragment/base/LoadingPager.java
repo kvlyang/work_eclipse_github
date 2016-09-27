@@ -248,7 +248,7 @@ public abstract class LoadingPager extends FrameLayout {
 		currentState = STATE_LOADING;// 如果界面无数据，先显示loading页,表示正在获取网络数据
 		refreshUI();
 		//new Thread(new LoadDataHttpTask()).start();
-		ThreadPoolFactory.getDownLoadPool().execute(new LoadDataHttpTask());
+		ThreadPoolFactory.getNormalPool().execute(new LoadDataHttpTask());
 	}
 
 	class LoadDataHttpTask implements Runnable {
@@ -287,7 +287,7 @@ public abstract class LoadingPager extends FrameLayout {
 		currentState = STATE_LOADING;
 		refreshUI();
 		//new Thread(new LoadDataHttpForceTask()).start();
-		ThreadPoolFactory.getDownLoadPool().execute(new LoadDataHttpForceTask());
+		ThreadPoolFactory.getNormalPool().execute(new LoadDataHttpForceTask());
 	}
 
 	class LoadDataHttpForceTask implements Runnable {

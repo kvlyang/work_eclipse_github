@@ -52,7 +52,7 @@ public class SplashActivity extends Activity {
 			public void run() {
 				try {
 					//URL url = new URL("http://10.0.2.2:90/version.php");
-					URL url = new URL("http://192.168.1.100:80/version.php");
+					URL url = new URL("http://10.0.3.2/keweituServer/home.php");
 
 					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 					conn.setReadTimeout(5000);

@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.kvlyang.keweitu.listview.item.TestHolder;
+import com.kvlyang.keweitu.utils.UIUtils;
 
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -62,8 +64,10 @@ public abstract class BaseAdapterKwt<ITEMBEANTYPE> extends BaseAdapter
 			}
 			
 			if (holder == null) {
-				return null;
+				Log.e("keweituBug",
+						"creatHolder is null in BaseAdapterKwt");
 			}
+			
 			convertView = holder.getHolderView();
 			convertView.setTag(holder);
 		} else {
@@ -77,7 +81,7 @@ public abstract class BaseAdapterKwt<ITEMBEANTYPE> extends BaseAdapter
 
 	
 
-	public void setOnOnCreateHolderListener( OnCreateHolderListener<ITEMBEANTYPE> listener){
+	public void setOnCreateHolderListener( OnCreateHolderListener<ITEMBEANTYPE> listener){
 		onCreateHolderListener = listener;
 	}
 

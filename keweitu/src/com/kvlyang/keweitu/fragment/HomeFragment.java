@@ -3,6 +3,7 @@ package com.kvlyang.keweitu.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import android.R.string;
 import android.graphics.Color;
 import android.os.SystemClock;
@@ -22,6 +23,9 @@ import com.kvlyang.keweitu.listview.base.BaseAdapterKwt.OnCreateHolderListener;
 import com.kvlyang.keweitu.listview.base.BaseHolder;
 import com.kvlyang.keweitu.listview.item.TestHolder;
 import com.kvlyang.keweitu.utils.UIUtils;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 
 
 
@@ -30,16 +34,27 @@ public class HomeFragment extends BaseFragment {
 	
 	@Override
 	protected LoadedResult initDataFromCaches() {
-		SystemClock.sleep(1000);
-		for(int n = 0; n<100;n++){
+		
+		
+		
+		/*for(int n = 0; n<100;n++){
 			mDatas.add("test"+n);
-		}
+		}*/
 		return LoadedResult.UPDATE;
 	}
 	
 	@Override
-	protected LoadedResult initDataFromHttp() {
-		//此方法也可不起做用，listview的更新可自己下拉刷新
+	protected LoadedResult initDataFromHttp() { 
+		//不需要管loading显示，没有数据显示时，默认 调用initDataFromHttp()已经自动显示了loading界面
+		
+		HttpUtils httpUtils = new HttpUtils();
+		String url = "http://localhost/keweitu/home?indext=0";
+		try {
+			httpUtils.sendSync(HttpMethod.GET, url);
+		} catch (HttpException e) {
+			e.printStackTrace();
+			return LoadedResult.EMPTY;
+		}
 		SystemClock.sleep(3000);
 		return LoadedResult.EMPTY;
 	}
@@ -56,15 +71,15 @@ public class HomeFragment extends BaseFragment {
 		listView.setFastScrollEnabled(true);
 		
 		HomeAdapter homeAdapter = new HomeAdapter(mDatas);
-		homeAdapter.setOnOnCreateHolderListener(new OnCreateHolderListener<String>() {
+		homeAdapter.setOnCreateHolderListener(new OnCreateHolderListener<String>() {
 
 			@Override
 			public BaseHolder<String> creatHolder() {
-				// TODO Auto-generated method stub
 				return new TestHolder();
 			}
 			
 		});
+		//adapter最好先setOnCreateHolderListener再赋值给listView
 		listView.setAdapter(homeAdapter);
 		return listView;
 	}

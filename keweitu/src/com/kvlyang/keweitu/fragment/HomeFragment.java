@@ -16,7 +16,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.kvlyang.keweitu.R;
+import com.kvlyang.keweitu.bean.HomeBean;
 import com.kvlyang.keweitu.fragment.base.BaseFragment;
 import com.kvlyang.keweitu.fragment.base.LoadingPager.LoadedResult;
 import com.kvlyang.keweitu.listview.base.BaseAdapterKwt;
@@ -41,7 +43,7 @@ public class HomeFragment extends BaseFragment {
 		/*
 		 * for(int n = 0; n<100;n++){ mDatas.add("test"+n); }
 		 */
-		return LoadedResult.UPDATE;
+		return LoadedResult.UPDATE; 
 	}
 
 	@Override
@@ -51,24 +53,25 @@ public class HomeFragment extends BaseFragment {
 	try {
 		Log.e("keweituBug", "HttpUtils();");
 			HttpUtils httpUtils = new HttpUtils();
-			String url = "http://10.0.3.2/keweituServer/home.php";
+		//	String url = "http://10.0.3.2/keweituServer/home.php";
+			//String url = "http://10.0.3.2:8080/GooglePlayServer/home?index=0";
+			String url = "http://10.0.3.2:8080/GooglePlayServer/image?name=app/com.renren.mobile.android/icon.jpg";
 		//	String url = "https://www.baidu.com/?tn=62095104_oem_dg";
 			RequestParams params = new RequestParams();
 			params.addQueryStringParameter("index", "0");
-//			ResponseStream stream = httpUtils.sendSync(HttpMethod.GET, url,
-//					params);
-			Log.e("keweituBug", "22");
-			ResponseStream stream = httpUtils.sendSync(HttpMethod.GET, url);
-			Log.e("keweituBug", "55");
+			ResponseStream stream = httpUtils.sendSync(HttpMethod.GET, url,
+					params);
 			result = stream.readString();
-			LogUtils.v("keweitu","httpTest  "+ result);
-
+			
+			//解析json网络数据
+			Gson gson = new Gson();
+			gson.fromJson(result, HomeBean.class);
 		} catch (Exception e) {
-			Log.e("keweituBug", "44");
 			e.printStackTrace();
+			return LoadedResult.EMPTY;//获取网络数据失败，如果SuccessView存在缓存数据则不做任何变化
 		}
 		
-		return LoadedResult.UPDATE_F;
+		return LoadedResult.UPDATE_F;//获取网络数据成功，强制更新SuccessView
 	}
 
 	@Override

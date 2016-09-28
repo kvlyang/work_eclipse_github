@@ -68,7 +68,7 @@ public class SplashActivity extends Activity {
 							jsonString.append(line);
 							line = reader.readLine();
 						}
-						System.out.println(jsonString+" json");
+						System.out.println("KeWeiTu: httpTest:"+jsonString);
 						reader.close();conn.disconnect();
 						
 						//json

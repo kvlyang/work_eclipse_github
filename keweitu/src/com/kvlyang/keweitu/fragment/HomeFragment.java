@@ -65,7 +65,7 @@ public class HomeFragment extends BaseFragment {
 			Gson gson = new Gson();
 			HomeBean homeBean = gson.fromJson(homeData.result, HomeBean.class);
 
-			// 异常处理，显示空界面或缓存
+			// 异常处理，显示网络异常界面或缓存
 			if (homeBean == null) {
 				dataView.state = LoadedResult.ERROR;
 				return dataView;
@@ -82,10 +82,10 @@ public class HomeFragment extends BaseFragment {
 			dataView.state = LoadedResult.ERROR;
 			return dataView;// 获取网络数据失败，如果SuccessView存在缓存数据则不做任何变化
 		}
-
+		// 获取网络数据成功，强制更新SuccessView
 		dataView.state = LoadedResult.UPDATE_F;
 		dataView.data = homeData;
-		return dataView;// 获取网络数据成功，强制更新SuccessView
+		return dataView;
 	}
 
 	@Override

@@ -56,6 +56,7 @@ public class HomeFragment extends BaseFragment {
 			result = stream.readString();
 			
 			//解析json网络数据
+<<<<<<< HEAD
 			Gson gson = new Gson();
 			HomeBean homeBean = gson.fromJson(result, HomeBean.class);
 
@@ -69,6 +70,10 @@ public class HomeFragment extends BaseFragment {
 				return dataView;
 			}
 			mDatas = homeBean.list;
+=======
+			//Gson gson = new Gson();
+			//gson.fromJson(result, HomeBean.class);
+>>>>>>> origin/master
 		} catch (Exception e) {
 			e.printStackTrace();
 			dataView.state = LoadedResult.EMPTY;

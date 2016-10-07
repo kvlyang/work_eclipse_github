@@ -64,8 +64,8 @@ public class HomeFragment extends BaseFragment {
 			result = stream.readString();
 			
 			//解析json网络数据
-			Gson gson = new Gson();
-			gson.fromJson(result, HomeBean.class);
+			//Gson gson = new Gson();
+			//gson.fromJson(result, HomeBean.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return LoadedResult.EMPTY;//获取网络数据失败，如果SuccessView存在缓存数据则不做任何变化

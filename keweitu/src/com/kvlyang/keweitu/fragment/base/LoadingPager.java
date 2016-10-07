@@ -31,9 +31,7 @@ public abstract class LoadingPager extends FrameLayout {
 	private View successView;
 	boolean successViewFlag = false; // 数据界面是否已加载到frame容器
 
-	public boolean httpDowning = false; // 是否网络正在更新中(非线程安全)
-
-	// boolean LoadRule = true;// 强制更新
+	public boolean httpDowning = false; // 是否网络正在更新中(非线程安全)防止重复任务
 
 	public LoadingPager(Context context) {
 		super(context);

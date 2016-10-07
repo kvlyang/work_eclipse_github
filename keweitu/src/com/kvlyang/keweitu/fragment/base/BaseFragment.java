@@ -1,6 +1,5 @@
 package com.kvlyang.keweitu.fragment.base;
 
-import com.kvlyang.keweitu.fragment.base.LoadingPager.LoadedResult;
 import com.kvlyang.keweitu.utils.UIUtils;
 
 import android.os.Bundle;
@@ -28,18 +27,18 @@ public abstract class BaseFragment extends Fragment {
 			loadingPager = new LoadingPager(UIUtils.getContext()) {
 
 				@Override
-				public LoadedResult initDataFromCaches() {
+				public LoadedDataAndView initDataFromCaches() {
 					return BaseFragment.this.initDataFromCaches();
 				}
 				
 				@Override
-				public LoadedResult initDataFromHttp() {
+				public LoadedDataAndView initDataFromHttp() {
 					return BaseFragment.this.initDataFromHttp();
 				}
 
 				@Override
-				public View initSuccessView() {
-					return BaseFragment.this.initSuccessView();
+				public View initSuccessView(Object data) {
+					return BaseFragment.this.initSuccessView(data);
 				}
 				
 			};
@@ -54,10 +53,10 @@ public abstract class BaseFragment extends Fragment {
 	}
 
 
-	protected abstract View initSuccessView();
+	protected abstract View initSuccessView(Object data);
 
-	protected abstract LoadedResult initDataFromCaches();
-	protected abstract LoadedResult initDataFromHttp();
+	protected abstract LoadedDataAndView initDataFromCaches();
+	protected abstract LoadedDataAndView initDataFromHttp();
 	
 	public LoadingPager getLoadingPager() {
 		return loadingPager;

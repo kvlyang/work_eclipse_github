@@ -24,6 +24,7 @@ public abstract class LoadingPager extends FrameLayout {
 	public static final int STATE_CACHE = 5;// 当前界面有缓存数据
 
 	public int currentState = STATE_LOADING;
+	private Object currentData = null;
 	private View loadingView;
 	private View errorView;
 	private View emptyView;
@@ -54,8 +55,9 @@ public abstract class LoadingPager extends FrameLayout {
 		refreshUI();
 	}
 
-	private void refreshUI(LoadedResult state) {
+	private void refreshUI(LoadedResult state, Object data) {
 		currentState = state.getState();// 使状态和界面更新在同一主线程执行
+		currentData = data;
 		refreshUI();
 	}
 
@@ -66,7 +68,7 @@ public abstract class LoadingPager extends FrameLayout {
 				// 界面强制更新成功后更改状态，减少无意义的刷新判断
 				currentState = STATE_CACHE;
 
-				View tempView = initSuccessView();
+				View tempView = initSuccessView(currentData);
 				if (tempView == null) { // 更新界面出现异常
 					// 应该处理：默认显示错误界面（可添加广告或错误提示）
 					int doSomethingForcedUpdateErr = 1;
@@ -87,7 +89,7 @@ public abstract class LoadingPager extends FrameLayout {
 				}
 			} else if (currentState == STATE_UPDATE) {
 				currentState = STATE_CACHE;
-				if (initSuccessView() == null) { // 界面出现异常
+				if (initSuccessView(currentData) == null) { // 界面出现异常
 					// 不做处理显示原缓存数据界面,只在log提示异常
 					/*
 					 * int doSomethingUpdateErr = 0; if (doSomethingUpdateErr !=
@@ -113,7 +115,7 @@ public abstract class LoadingPager extends FrameLayout {
 			if (currentState == STATE_FORCED_UPDATE
 					|| currentState == STATE_UPDATE) {
 				// 第一次更新界面
-				View tempView = initSuccessView();
+				View tempView = initSuccessView(currentData);
 				if (tempView == null) { // 待更新界面解析出现异常
 					int doSomethingFirstUpdateErr = 1;
 					if (currentState == STATE_FORCED_UPDATE) {
@@ -195,14 +197,15 @@ public abstract class LoadingPager extends FrameLayout {
 		@Override
 		public void run() {
 			Log.e("keweituBug", "LoadDataTask ");
-
-			final LoadedResult state = initDataFromCaches();
+			final LoadedDataAndView dataView = initDataFromCaches();
+			final LoadedResult state = dataView.state; 
+			final Object data = dataView.data;
 			UIUtils.postUiTaskSafely(new Runnable() {
 
 				@Override
 				public void run() {
 					// 如果无缓存数据，默认依然显示loading页，想显示空白页请在initDataFromCache中返回STATE_EMPTY
-					refreshUI(state);
+					refreshUI(state,data);
 				}
 			});
 		}
@@ -222,7 +225,8 @@ public abstract class LoadingPager extends FrameLayout {
 		@Override
 		public void run() {
 			Log.e("keweituBug", "LoadDataCachesForceTask ");
-			initDataFromCaches();
+			final LoadedDataAndView dataView = initDataFromCaches();
+			final Object data = dataView.data;
 			// 不管是否获得缓存数据，反正要强制更新successView界面，哪怕initSuccessView为null就显示err界面
 			final LoadedResult state = LoadedResult.UPDATE_F;
 
@@ -230,7 +234,7 @@ public abstract class LoadingPager extends FrameLayout {
 
 				@Override
 				public void run() {
-					refreshUI(state);
+					refreshUI(state,data);
 				}
 			});
 		}
@@ -258,7 +262,9 @@ public abstract class LoadingPager extends FrameLayout {
 			Log.e("keweituBug", "LoadDataTaskForce ");
 			// （如果网络更新失败，initSuccessView为null，最好返回STATE_ERROR无任何缓存时显示错误，而不是UPDATE_F）
 			// 除非必须实时更新的显示页面，不推荐无新数据时UPDATE_F强制更新，在有缓存显示情况下，会取消缓存数据显示页
-			final LoadedResult state = initDataFromHttp();
+			final LoadedDataAndView dataView = initDataFromHttp();
+			final LoadedResult state = dataView.state; 
+			final Object data = dataView.data;
 			/*
 			 * 强制更新succeView if(state == LoadedResult.UPDATE){ state
 			 * =LoadedResult.UPDATE_F; }
@@ -271,7 +277,7 @@ public abstract class LoadingPager extends FrameLayout {
 					if (state == null) {
 						Log.e("keweituBug", "refreshUI(state) state is null ");
 					}
-					refreshUI(state);
+					refreshUI(state,data);
 				}
 			});
 		}
@@ -295,27 +301,28 @@ public abstract class LoadingPager extends FrameLayout {
 		@Override
 		public void run() {
 			Log.e("keweituBug", "LoadDataTaskForce ");
-			initDataFromHttp();
+			LoadedDataAndView dataView = initDataFromHttp();
+			final Object data = dataView.data;
 			// 不管网络更新与否，强制更新succeView
 			final LoadedResult state = LoadedResult.UPDATE_F;
-
+			
 			UIUtils.postUiTaskSafely(new Runnable() {
 
 				@Override
 				public void run() {
 					httpDowning = false;
-					refreshUI(state);
+					refreshUI(state,data);
 				}
 			});
 		}
 
 	}
 
-	public abstract LoadedResult initDataFromCaches();
+	public abstract LoadedDataAndView initDataFromCaches();
 
-	public abstract LoadedResult initDataFromHttp();
+	public abstract LoadedDataAndView initDataFromHttp();
 
-	public abstract View initSuccessView();
+	public abstract View initSuccessView(Object data);
 
 	public enum LoadedResult {
 		UPDATE_F(STATE_FORCED_UPDATE), UPDATE(STATE_UPDATE), ERROR(STATE_ERROR), EMPTY(
@@ -330,4 +337,6 @@ public abstract class LoadingPager extends FrameLayout {
 			this.state = state;
 		}
 	}
+	
+	
 }

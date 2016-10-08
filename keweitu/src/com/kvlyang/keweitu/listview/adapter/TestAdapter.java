@@ -20,6 +20,12 @@ public class TestAdapter extends BaseAdapterKwt<String>{
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public List<String> OnLoadMore() {
+		return null;
+		
+	}
 	
 
 }

@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.kvlyang.keweitu.bean.AppInfoBean;
@@ -117,17 +116,10 @@ public class HomeFragment extends BaseFragment {
 		// adapter最好先setOnCreateHolderListener再赋值给listView
 		homeAdapter
 				.setOnCreateHolderListener(new OnCreateHolderListener<AppInfoBean>() {
-
 					@Override
 					public BaseHolder<AppInfoBean> creatHolder(int type) {
-						if(type == BaseAdapterKwt.ViewType_normal){
 							return new HomeHolder();
-						}else{
-							return new LoadMoreHolder();
-						}
-						
 					}
-
 				});
 		
 		listView.setAdapter(homeAdapter);
@@ -145,6 +137,12 @@ public class HomeFragment extends BaseFragment {
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 
+		}
+
+		@Override
+		public List<AppInfoBean> OnLoadMore() {
+			return null;
+			
 		}
 
 	}

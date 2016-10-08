@@ -26,7 +26,10 @@ import android.widget.BaseAdapter;
 public abstract class BaseAdapterKwt<ITEMBEANTYPE> extends BaseAdapter
 		implements OnItemClickListener {
 	public List<ITEMBEANTYPE> mListData = new ArrayList<ITEMBEANTYPE>();
-	OnCreateHolderListener<ITEMBEANTYPE> onCreateHolderListener;
+	public static final int ViewType_normal = 0;
+	public static final int ViewType_loadMore = 1;
+	
+	OnCreateHolderListener<ITEMBEANTYPE> onCreateHolderListener;//监听itemView的创建
 
 	public BaseAdapterKwt(List<ITEMBEANTYPE> listData) {
 		super();
@@ -54,13 +57,33 @@ public abstract class BaseAdapterKwt<ITEMBEANTYPE> extends BaseAdapter
 		// TODO
 		return position;
 	}
-
+	
+/*	============listView里面可以显示几种viewType======================*/
+	
+	@Override
+	public int getViewTypeCount() {
+		// TODO Auto-generated method stub
+		return super.getViewTypeCount()+1;
+	}
+	
+	@Override
+	public int getItemViewType(int position) {
+		//如果滑到底部，对应的ViewType是加载更多
+		if(position == getCount()-1){
+			return ViewType_loadMore;
+		}
+		return ViewType_normal;
+	}
+	
+	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		BaseHolder<ITEMBEANTYPE> holder = null;
+		int type = getItemViewType(position);
+		
 		if (convertView == null) {
 			if(onCreateHolderListener !=null){
-				holder = (BaseHolder<ITEMBEANTYPE>) onCreateHolderListener.creatHolder(); 
+				holder = (BaseHolder<ITEMBEANTYPE>) onCreateHolderListener.creatHolder(type); 
 			}
 			
 			if (holder == null) {
@@ -87,7 +110,7 @@ public abstract class BaseAdapterKwt<ITEMBEANTYPE> extends BaseAdapter
 
 	
 	public interface OnCreateHolderListener<ITEMBEANTYPE>{
-		public BaseHolder<ITEMBEANTYPE> creatHolder();
+		public BaseHolder<ITEMBEANTYPE> creatHolder(int type);
 		}
 }
 

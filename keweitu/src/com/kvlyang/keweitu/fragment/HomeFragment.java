@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.kvlyang.keweitu.bean.AppInfoBean;
 import com.kvlyang.keweitu.bean.HomeBean;
+import com.kvlyang.keweitu.conf.UrlUpdate;
 import com.kvlyang.keweitu.fragment.base.BaseFragment;
 import com.kvlyang.keweitu.fragment.base.LoadedDataAndView;
 import com.kvlyang.keweitu.fragment.base.LoadingPager.LoadedResult;
@@ -45,12 +46,12 @@ public class HomeFragment extends BaseFragment {
 	protected LoadedDataAndView initDataFromHttp() {
 		LoadedDataAndView dataView = new LoadedDataAndView();
 		HomeData homeData = new HomeData();
-		SystemClock.sleep(4000);
+	//	SystemClock.sleep(4000);
 		try {
-			Log.e("keweituBug", "HttpUtils() start;");
+			Log.e("keweitu", "HttpUtils() start;");
 			HttpUtils httpUtils = new HttpUtils();
 			// String url = "http://10.0.3.2/keweituServer/home.php";
-			String url = "http://10.0.3.2:8080/GooglePlayServer/home?index=0";
+			String url = UrlUpdate.URLS.BASEURL+"/home?index=0";
 			// String url =
 			// "http://10.0.3.2:8080/GooglePlayServer/image?name=app/com.renren.mobile.android/icon.jpg";
 			// String url = "https://www.baidu.com/?tn=62095104_oem_dg";
@@ -113,16 +114,22 @@ public class HomeFragment extends BaseFragment {
 		listView.setFastScrollEnabled(true);
 
 		HomeAdapter homeAdapter = new HomeAdapter(homeDatas.mDatas);
+		// adapter最好先setOnCreateHolderListener再赋值给listView
 		homeAdapter
 				.setOnCreateHolderListener(new OnCreateHolderListener<AppInfoBean>() {
 
 					@Override
-					public BaseHolder<AppInfoBean> creatHolder() {
-						return new HomeHolder();
+					public BaseHolder<AppInfoBean> creatHolder(int type) {
+						if(type == BaseAdapterKwt.ViewType_normal){
+							return new HomeHolder();
+						}else{
+							return new LoadMoreHolder();
+						}
+						
 					}
 
 				});
-		// adapter最好先setOnCreateHolderListener再赋值给listView
+		
 		listView.setAdapter(homeAdapter);
 		return listView;
 	}

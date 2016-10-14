@@ -142,12 +142,7 @@ public abstract class BaseAdapterKwt<ITEMBEANTYPE> extends BaseAdapter
 		if (loadMoreHolder == null) {
 			Log.e("keweituBug", "creatHolder is null in BaseAdapterKwt");
 		}
-		if (LoadMoreHolder.STATE_none == loadState) {
-			loadState = LoadMoreHolder.STATE_loading;
-			PerformLoadMore();
-		}else if(LoadMoreHolder.STATE_finish == loadState){
-			//do nothing
-		}
+
 		loadMoreHolder.setDataAndRefreshHolderView(loadState);
 		return loadMoreHolder.getHolderView();
 	}
@@ -201,14 +196,14 @@ public abstract class BaseAdapterKwt<ITEMBEANTYPE> extends BaseAdapter
 							@Override
 							public void run() {
 								if(loadState == LoadMoreHolder.STATE_finish)
-								loadState = LoadMoreHolder.STATE_none;
+								loadState = LoadMoreHolder.STATE_clickupdate;
 								
 							}
 						}, 4000);
 					}
 					
 					if(state != LoadMoreHolder.STATE_retry && loadMoreDatas.size()>0){
-						//更新数据
+						//更新显示
 					}
 					//更新状态
 					creatLoadMoreView(ViewType_loadMore);

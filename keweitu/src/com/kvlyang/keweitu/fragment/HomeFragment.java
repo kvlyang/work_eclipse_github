@@ -5,11 +5,13 @@ import java.util.List;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
 import com.kvlyang.keweitu.bean.AppInfoBean;
 import com.kvlyang.keweitu.bean.HomeBean;
 import com.kvlyang.keweitu.fragment.base.BaseFragment;
@@ -29,16 +31,30 @@ public class HomeFragment extends BaseFragment {
 	protected LoadedDataAndView initDataFromCaches() {
 		//SystemClock.sleep(3000);
 		LoadedDataAndView dataView = new LoadedDataAndView();
-		dataView.state = LoadedResult.UPDATE;
-		dataView.data = null;
-		return dataView;
+		String result = CacheDataLoad.loadDataFromFile("home", 0);
+		if( result == null){
+			dataView.state = LoadedResult.UPDATE;
+			dataView.data = null;
+			return dataView;
+		}else{
+			Gson gson = new Gson();
+			HomeBean bean = gson.fromJson(result, HomeBean.class);
+			HomeData homeData = new HomeData();
+			homeData.mDatas = bean.list;
+			homeData.pictures = bean.picture;
+			dataView.state = LoadedResult.UPDATE;
+			dataView.data = homeData;
+			return dataView;
+		}
+		
 	}
 
 	@Override
 	protected LoadedDataAndView initDataFromHttp() {
 		LoadedDataAndView dataView = new LoadedDataAndView();
 		HomeData homeData = new HomeData();
-	//	SystemClock.sleep(2000);
+		String result;
+		SystemClock.sleep(4000);
 		//如果缓存数据未过期，不从网络更新，节省流量
 		if (!CacheDataLoad.isCachaOutTime("home", 0)){
 			dataView.state = LoadedResult.EMPTY;
@@ -48,7 +64,10 @@ public class HomeFragment extends BaseFragment {
 			
 			
 		try {
-			HomeBean homeBean = HttpProtocal.loadHomeData(0);
+			// 解析json网络数据
+			result =  HttpProtocal.loadHttpData("home",0);
+			Gson gson = new Gson();
+			HomeBean homeBean = gson.fromJson(result, HomeBean.class);
 			// 异常处理，显示网络异常界面或缓存
 			if (homeBean == null) {
 				dataView.state = LoadedResult.ERROR;
@@ -61,14 +80,17 @@ public class HomeFragment extends BaseFragment {
 				return dataView;
 			}
 			homeData.mDatas = homeBean.list;
+			homeData.pictures = homeBean.picture;
 
 		} catch (Exception e) {
 			Log.e("keweituBug", "HttpUtils() error;");
 			// e.printStackTrace();
 			dataView.state = LoadedResult.ERROR;
 			dataView.data = null;
-			return dataView;// 获取网络数据失败，如果SuccessView存在缓存数据则不做任何变化
+			return dataView;// 获取网络数据失败
 		}
+		//保存到缓存
+		CacheDataLoad.writeDataToFile("home", 0, result);
 		
 		// 获取网络数据成功，强制更新SuccessView
 		dataView.state = LoadedResult.UPDATE_F;
@@ -133,7 +155,9 @@ public class HomeFragment extends BaseFragment {
 		@Override
 		public List<AppInfoBean> OnLoadMore() throws Exception {
 		//	SystemClock.sleep(3000);
-			return HttpProtocal.loadHomeData(mListData.size()).list;
+			String result = HttpProtocal.loadHttpData("home",mListData.size());
+			Gson gson = new Gson();
+			return gson.fromJson(result, HomeBean.class).list;
 			
 		}
 

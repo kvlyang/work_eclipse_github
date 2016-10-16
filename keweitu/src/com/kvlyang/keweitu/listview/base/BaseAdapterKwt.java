@@ -34,7 +34,8 @@ public abstract class BaseAdapterKwt<ITEMBEANTYPE> extends BaseAdapter
 	public static final int ViewType_normal = 0;
 	public static final int ViewType_loadMore = 1;
 	BaseHolder<Integer> loadMoreHolder = new LoadMoreHolder();
-	public int loadState = LoadMoreHolder.STATE_clickupdate;
+	public int loadState = LoadMoreHolder.STATE_clickupdate;;
+	boolean hasLoadMoreFlag = true;
 
 	OnCreateHolderListener<ITEMBEANTYPE> onCreateHolderListener;// 监听itemView的创建
 
@@ -46,7 +47,7 @@ public abstract class BaseAdapterKwt<ITEMBEANTYPE> extends BaseAdapter
 	@Override
 	public int getCount() {
 		if (mListData != null) {
-			return mListData.size();
+			return mListData.size()+1;
 		}
 		return 0;
 	}
@@ -123,6 +124,23 @@ public abstract class BaseAdapterKwt<ITEMBEANTYPE> extends BaseAdapter
 		}
 
 	}
+	
+	
+
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		
+		if(getItemViewType(position)==ViewType_loadMore){
+			PerformLoadMore();
+		}else {
+			onNormalItemClick(parent,view,position,id);
+		}
+	}
+	
+	public void onNormalItemClick(AdapterView<?> parent, View view, int position,
+			long id){
+		
+	}
 
 	View creatNomalView(int position, int type) {
 		BaseHolder<ITEMBEANTYPE> holder = null;
@@ -142,14 +160,33 @@ public abstract class BaseAdapterKwt<ITEMBEANTYPE> extends BaseAdapter
 		if (loadMoreHolder == null) {
 			Log.e("keweituBug", "creatHolder is null in BaseAdapterKwt");
 		}
-
+		if(!hasLoadMoreFlag){
+			loadState = LoadMoreHolder.STATE_none;
+		}
 		loadMoreHolder.setDataAndRefreshHolderView(loadState);
 		return loadMoreHolder.getHolderView();
 	}
 
-	private void PerformLoadMore() {
-		ThreadPoolFactory.getNormalPool().execute(new LoadMoreTask());
+	protected void PerformLoadMore() {
+		if(loadState == LoadMoreHolder.STATE_loading)return;
+		Log.e("keweituBug", "perforemLoadMore");
+		loadState = LoadMoreHolder.STATE_loading;
+		creatLoadMoreView(ViewType_loadMore);
+		
+		if(hasLoadMore()){
+			ThreadPoolFactory.getNormalPool().execute(new LoadMoreTask());
+		}
+		
 
+	}
+
+	private boolean hasLoadMore() {
+		// TODO Auto-generated method stub
+		return hasLoadMoreFlag;
+	}
+	
+	public void setHasLoadMore(boolean enable){
+		hasLoadMoreFlag = enable;
 	}
 
 	public void setOnCreateHolderListener(
@@ -161,7 +198,9 @@ public abstract class BaseAdapterKwt<ITEMBEANTYPE> extends BaseAdapter
 		public BaseHolder<ITEMBEANTYPE> creatHolder(int type);
 	}
 	
-	public abstract List<ITEMBEANTYPE> OnLoadMore() throws Exception;
+	public  List<ITEMBEANTYPE> OnLoadMore() throws Exception{
+		return null;
+	}
 
 	class LoadMoreTask implements Runnable {
 		int state;
@@ -202,8 +241,10 @@ public abstract class BaseAdapterKwt<ITEMBEANTYPE> extends BaseAdapter
 						}, 4000);
 					}
 					
-					if(state != LoadMoreHolder.STATE_retry && loadMoreDatas.size()>0){
-						//更新显示
+					if(state != LoadMoreHolder.STATE_retry && loadMoreDatas !=null && loadMoreDatas.size()>0){
+						//更新listview显示
+						mListData.addAll(loadMoreDatas);
+						notifyDataSetChanged();
 					}
 					//更新状态
 					creatLoadMoreView(ViewType_loadMore);

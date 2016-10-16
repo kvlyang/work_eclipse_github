@@ -4,16 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.Color;
-import android.os.SystemClock;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.google.gson.Gson;
 import com.kvlyang.keweitu.bean.AppInfoBean;
 import com.kvlyang.keweitu.bean.HomeBean;
-import com.kvlyang.keweitu.conf.UrlUpdate;
 import com.kvlyang.keweitu.fragment.base.BaseFragment;
 import com.kvlyang.keweitu.fragment.base.LoadedDataAndView;
 import com.kvlyang.keweitu.fragment.base.LoadingPager.LoadedResult;
@@ -21,20 +19,15 @@ import com.kvlyang.keweitu.listview.base.BaseAdapterKwt;
 import com.kvlyang.keweitu.listview.base.BaseAdapterKwt.OnCreateHolderListener;
 import com.kvlyang.keweitu.listview.base.BaseHolder;
 import com.kvlyang.keweitu.listview.item.HomeHolder;
+import com.kvlyang.keweitu.protocal.HttpProtocal;
+import com.kvlyang.keweitu.utils.CacheDataLoad;
 import com.kvlyang.keweitu.utils.UIUtils;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseStream;
-import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 
 public class HomeFragment extends BaseFragment {
 
 	@Override
 	protected LoadedDataAndView initDataFromCaches() {
-		SystemClock.sleep(3000);
-		/*
-		 * for(int n = 0; n<100;n++){ mDatas.add("test"+n); }
-		 */
+		//SystemClock.sleep(3000);
 		LoadedDataAndView dataView = new LoadedDataAndView();
 		dataView.state = LoadedResult.UPDATE;
 		dataView.data = null;
@@ -45,33 +38,26 @@ public class HomeFragment extends BaseFragment {
 	protected LoadedDataAndView initDataFromHttp() {
 		LoadedDataAndView dataView = new LoadedDataAndView();
 		HomeData homeData = new HomeData();
-	//	SystemClock.sleep(4000);
+	//	SystemClock.sleep(2000);
+		//如果缓存数据未过期，不从网络更新，节省流量
+		if (!CacheDataLoad.isCachaOutTime("home", 0)){
+			dataView.state = LoadedResult.EMPTY;
+			dataView.data = null;
+			return dataView;
+		}
+			
+			
 		try {
-			Log.e("keweitu", "HttpUtils() start;");
-			HttpUtils httpUtils = new HttpUtils();
-			// String url = "http://10.0.3.2/keweituServer/home.php";
-			String url = UrlUpdate.URLS.BASEURL+"/home?index=0";
-			// String url =
-			// "http://10.0.3.2:8080/GooglePlayServer/image?name=app/com.renren.mobile.android/icon.jpg";
-			// String url = "https://www.baidu.com/?tn=62095104_oem_dg";
-			RequestParams params = new RequestParams();
-			params.addQueryStringParameter("index", "0");
-			ResponseStream stream = httpUtils.sendSync(HttpMethod.GET, url,
-					params);
-			homeData.result = stream.readString();
-
-			// 解析json网络数据
-
-			Gson gson = new Gson();
-			HomeBean homeBean = gson.fromJson(homeData.result, HomeBean.class);
-
+			HomeBean homeBean = HttpProtocal.loadHomeData(0);
 			// 异常处理，显示网络异常界面或缓存
 			if (homeBean == null) {
 				dataView.state = LoadedResult.ERROR;
+				dataView.data = null;
 				return dataView;
 			}
 			if (homeBean.list == null || homeBean.list.size() == 0) {
 				dataView.state = LoadedResult.ERROR;
+				dataView.data = null;
 				return dataView;
 			}
 			homeData.mDatas = homeBean.list;
@@ -80,8 +66,10 @@ public class HomeFragment extends BaseFragment {
 			Log.e("keweituBug", "HttpUtils() error;");
 			// e.printStackTrace();
 			dataView.state = LoadedResult.ERROR;
+			dataView.data = null;
 			return dataView;// 获取网络数据失败，如果SuccessView存在缓存数据则不做任何变化
 		}
+		
 		// 获取网络数据成功，强制更新SuccessView
 		dataView.state = LoadedResult.UPDATE_F;
 		dataView.data = homeData;
@@ -111,6 +99,7 @@ public class HomeFragment extends BaseFragment {
 
 		listView.setCacheColorHint(Color.TRANSPARENT);
 		listView.setFastScrollEnabled(true);
+		listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 
 		HomeAdapter homeAdapter = new HomeAdapter(homeDatas.mDatas);
 		// adapter最好先setOnCreateHolderListener再赋值给listView
@@ -123,6 +112,7 @@ public class HomeFragment extends BaseFragment {
 				});
 		
 		listView.setAdapter(homeAdapter);
+		listView.setOnItemClickListener(homeAdapter);
 		return listView;
 	}
 
@@ -133,15 +123,17 @@ public class HomeFragment extends BaseFragment {
 			super(mDatas);
 		}
 
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
-
+		public void onNormalItemClick(AdapterView<?> parent, View view, int position,
+				long id){
+			
 		}
+		
+
 
 		@Override
-		public List<AppInfoBean> OnLoadMore() {
-			return null;
+		public List<AppInfoBean> OnLoadMore() throws Exception {
+		//	SystemClock.sleep(3000);
+			return HttpProtocal.loadHomeData(mListData.size()).list;
 			
 		}
 

@@ -65,8 +65,8 @@ public class MainActivity extends ActionBarActivity {
 			public void onPageSelected(int position) {
 				BaseFragment fragment = (BaseFragment) FragmentFactory.getFragment(position);
 				if(fragment != null){
-					//如果已经从网络更新过，不要再拉数据（节省流量）
-					if(!fragment.httpDoneFinish){
+					
+				
 						/*
 						 * 从网络更新数据，
 						 * 异常处理：
@@ -74,7 +74,8 @@ public class MainActivity extends ActionBarActivity {
 						 * initSuccessView返回null，依据返回的state加载提示页
 						 */					
 						fragment.getLoadingPager().loadDataHttp();
-					}
+						//在initDataFromHttp()中判断， 如果缓存文件未过期，不会再拉数据（节省流量）
+					
 					
 				}
 				

@@ -39,7 +39,7 @@ public abstract class LoadingPager extends FrameLayout {
 	}
 
 	private void initCommonView() {
-		Log.e("keweituBug", "initCommonView()");
+	//	Log.e("keweituBug", "initCommonView()");
 		loadingView = View.inflate(UIUtils.getContext(),
 				R.layout.pager_loading, null);
 		this.addView(loadingView, 0);
@@ -60,7 +60,7 @@ public abstract class LoadingPager extends FrameLayout {
 	}
 
 	private void refreshUI() {
-		Log.e("keweituBug", "refreshUI()");
+	//	Log.e("keweituBug", "refreshUI()");
 		if (successView != null) { // 优先显示历史信息 History Info
 			if (currentState == STATE_FORCED_UPDATE) {// 强制刷新view
 				// 界面强制更新成功后更改状态，减少无意义的刷新判断
@@ -129,7 +129,11 @@ public abstract class LoadingPager extends FrameLayout {
 						successView = null;
 						successViewFlag = false;
 					} else if (doSomethingFirstUpdateErr == 0) {
-						currentState = STATE_EMPTY;
+						if(httpDowning){
+							currentState = STATE_LOADING;
+						}else if(currentState != STATE_ERROR){
+							currentState = STATE_EMPTY;
+						}
 						successView = null;
 						successViewFlag = false;
 					}
@@ -194,7 +198,7 @@ public abstract class LoadingPager extends FrameLayout {
 	class LoadDataCachesTask implements Runnable {
 		@Override
 		public void run() {
-			Log.e("keweituBug", "LoadDataTask ");
+		//	Log.e("keweituBug", "LoadDataTask ");
 			final LoadedDataAndView dataView = initDataFromCaches();
 			final LoadedResult state = dataView.state; 
 			final Object data = dataView.data;
@@ -222,7 +226,7 @@ public abstract class LoadingPager extends FrameLayout {
 
 		@Override
 		public void run() {
-			Log.e("keweituBug", "LoadDataCachesForceTask ");
+		//	Log.e("keweituBug", "LoadDataCachesForceTask ");
 			final LoadedDataAndView dataView = initDataFromCaches();
 			final Object data = dataView.data;
 			// 不管是否获得缓存数据，反正要强制更新successView界面，哪怕initSuccessView为null就显示err界面
@@ -257,7 +261,7 @@ public abstract class LoadingPager extends FrameLayout {
 		// 执行initDataFromHttp获取最新数据，根据返结果决定是否要强制更新successView
 		@Override
 		public void run() {
-			Log.e("keweituBug", "LoadDataTaskForce ");
+		//	Log.e("keweituBug", "LoadDataTaskForce ");
 			// （如果网络更新失败，initSuccessView为null，最好返回STATE_ERROR无任何缓存时显示错误，而不是UPDATE_F）
 			// 除非必须实时更新的显示页面，不推荐无新数据时UPDATE_F强制更新，在有缓存显示情况下，会取消缓存数据显示页
 			final LoadedDataAndView dataView = initDataFromHttp();
@@ -298,7 +302,7 @@ public abstract class LoadingPager extends FrameLayout {
 		// 执行initDataFromHttp获取最新数据，根据返结果决定是否要更新successView（如果网络更新失败，不需要更新view）
 		@Override
 		public void run() {
-			Log.e("keweituBug", "LoadDataTaskForce ");
+		//	Log.e("keweituBug", "LoadDataTaskForce ");
 			LoadedDataAndView dataView = initDataFromHttp();
 			final Object data = dataView.data;
 			// 不管网络更新与否，强制更新succeView

@@ -16,9 +16,6 @@ import android.view.ViewGroup;
  成功页面*/
 public abstract class BaseFragment extends Fragment {
 	LoadingPager loadingPager;
-	public boolean httpDoneFirst = false; //判断是否尝试过一次网络更新
-	public boolean httpDoneFinish = false; //是否网络更新成功过
-	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

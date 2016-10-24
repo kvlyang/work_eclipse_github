@@ -73,7 +73,14 @@
 
             <!-- 下载部分 -->
 
-
+            <com.kvlyang.keweitu.views.CircleProgressView
+                android:id="@+id/item_appinfo_circleprogressview"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:gravity="center"
+                android:orientation="vertical" >
+            </com.kvlyang.keweitu.views.CircleProgressView>
         </RelativeLayout>
 
         <!-- 分割线 -->

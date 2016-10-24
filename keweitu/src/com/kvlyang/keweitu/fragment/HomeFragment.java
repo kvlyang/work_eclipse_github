@@ -21,6 +21,7 @@ import com.kvlyang.keweitu.listview.base.BaseAdapterKwt;
 import com.kvlyang.keweitu.listview.base.BaseAdapterKwt.OnCreateHolderListener;
 import com.kvlyang.keweitu.listview.base.BaseHolder;
 import com.kvlyang.keweitu.listview.item.HomeHolder;
+import com.kvlyang.keweitu.listview.item.PictureHolder;
 import com.kvlyang.keweitu.protocal.HttpProtocal;
 import com.kvlyang.keweitu.utils.CacheDataLoad;
 import com.kvlyang.keweitu.utils.UIUtils;
@@ -54,7 +55,7 @@ public class HomeFragment extends BaseFragment {
 		LoadedDataAndView dataView = new LoadedDataAndView();
 		HomeData homeData = new HomeData();
 		String result;
-		SystemClock.sleep(4000);
+	//	SystemClock.sleep(4000);
 		//如果缓存数据未过期，不从网络更新，节省流量
 		if (!CacheDataLoad.isCachaOutTime("home", 0)){
 			dataView.state = LoadedResult.EMPTY;
@@ -122,7 +123,11 @@ public class HomeFragment extends BaseFragment {
 		listView.setCacheColorHint(Color.TRANSPARENT);
 		listView.setFastScrollEnabled(true);
 		listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
-
+		
+		//轮播图
+		PictureHolder pictureHolder = new PictureHolder();
+		View headView = pictureHolder.getHolderView();
+		
 		HomeAdapter homeAdapter = new HomeAdapter(homeDatas.mDatas);
 		// adapter最好先setOnCreateHolderListener再赋值给listView
 		homeAdapter

@@ -46,4 +46,24 @@ public class UIUtils {
 		}
 	}
 	
+	/**
+	 * dip-->px
+	 */
+	public static int dip2Px(int dip) {
+		// px/dip = density;
+		float density = getResource().getDisplayMetrics().density;
+		int px = (int) (dip * density + .5f);
+		return px;
+	}
+
+	/**
+	 * px-->dip
+	 */
+	public static int px2Dip(int px) {
+		// px/dip = density;
+		float density = getResource().getDisplayMetrics().density;
+		int dip = (int) (px / density + .5f);
+		return dip;
+	}
+	
 }

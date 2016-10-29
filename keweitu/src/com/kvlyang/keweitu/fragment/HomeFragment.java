@@ -126,6 +126,7 @@ public class HomeFragment extends BaseFragment {
 		
 		//轮播图
 		PictureHolder pictureHolder = new PictureHolder();
+		pictureHolder.setDataAndRefreshHolderView(homeDatas.pictures);
 		View headView = pictureHolder.getHolderView();
 		
 		HomeAdapter homeAdapter = new HomeAdapter(homeDatas.mDatas);
@@ -137,7 +138,7 @@ public class HomeFragment extends BaseFragment {
 							return new HomeHolder();
 					}
 				});
-		
+		listView.addHeaderView(headView);
 		listView.setAdapter(homeAdapter);
 		listView.setOnItemClickListener(homeAdapter);
 		return listView;

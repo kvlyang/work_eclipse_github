@@ -4,7 +4,9 @@ import java.util.List;
 
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -28,7 +30,8 @@ public class PictureHolder extends BaseHolder<List<String>> {
 	LinearLayout containerIndicator;
 
 	private List<String> list;
-	int selectNum = 0;
+	
+	int scrollCount = 0;
 
 	@Override
 	public View initHolderView() {
@@ -50,9 +53,10 @@ public class PictureHolder extends BaseHolder<List<String>> {
 		params.leftMargin = UIUtils.dip2Px(5);
 		params.bottomMargin = UIUtils.dip2Px(5);
 		containerIndicator.removeAllViews();
+		int selectNum = viewPager.getCurrentItem();
 		for (int i = 0; i < list.size(); i++) {
 			View indicatorView = new View(UIUtils.getContext());
-			if(selectNum == i){
+			if(selectNum%list.size() == i){
 				indicatorView.setBackgroundResource(R.drawable.indicator_selected);
 			}else{
 				indicatorView.setBackgroundResource(R.drawable.indicator_normal);
@@ -66,12 +70,12 @@ public class PictureHolder extends BaseHolder<List<String>> {
 		viewPager.setOnPageChangeListener(new OnPageChangeListener() {
 
 			@Override
-			public void onPageSelected(int arg0) {
-				selectNum = arg0;
+			public void onPageSelected(int position) {
+				position = position % list.size();
 				for (int i = 0; i < list.size(); i++) {
 					View indicatorView = containerIndicator.getChildAt(i);
 					
-					if(i == arg0){
+					if(i == position){
 						indicatorView
 						.setBackgroundResource(R.drawable.indicator_selected);
 					}else{
@@ -93,6 +97,31 @@ public class PictureHolder extends BaseHolder<List<String>> {
 
 			}
 		});
+		
+		viewPager.setCurrentItem(Integer.MAX_VALUE/2 - Integer.MAX_VALUE/2 % list.size());
+		
+		final AutoScrollTask autoScrollTask = new AutoScrollTask();
+		autoScrollTask.start();
+		
+		//触摸时移除轮播任务
+		viewPager.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()){
+				case MotionEvent.ACTION_DOWN:
+					autoScrollTask.stop();
+					break;
+				case MotionEvent.ACTION_UP:
+					scrollCount=0;
+					autoScrollTask.start();
+					break;
+				case MotionEvent.ACTION_MOVE:
+					break;
+				}
+				return false;
+			}
+		});
 	}
 
 	@Override
@@ -106,7 +135,8 @@ public class PictureHolder extends BaseHolder<List<String>> {
 		@Override
 		public int getCount() {
 			if (list != null) {
-				return list.size();
+				//return list.size();
+				return Integer.MAX_VALUE;
 			}
 			return 0;
 		}
@@ -118,6 +148,7 @@ public class PictureHolder extends BaseHolder<List<String>> {
 
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
+			position = position % list.size();
 			ImageView iv = new ImageView(UIUtils.getContext());
 			iv.setScaleType(ScaleType.FIT_XY);
 			iv.setImageResource(R.drawable.ic_default);
@@ -131,6 +162,29 @@ public class PictureHolder extends BaseHolder<List<String>> {
 		public void destroyItem(ViewGroup container, int position, Object object) {
 			container.removeView((View) object);
 		}
+	}
+	
+	class AutoScrollTask implements Runnable{
+		public void start(){
+			if(scrollCount == 0){
+				UIUtils.postTaskDelay(this,1000);
+				scrollCount++;
+			}
+			
+		}
+		
+		public void stop(){
+			UIUtils.removeTask(this);
+			scrollCount=100;
+		}
+		
+		@Override
+		public void run() {
+			viewPager.setCurrentItem(viewPager.getCurrentItem()+1);
+			scrollCount--;
+			start();
+		}
+		
 	}
 
 }

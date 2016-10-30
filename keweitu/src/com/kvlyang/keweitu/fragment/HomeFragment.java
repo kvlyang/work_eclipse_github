@@ -139,6 +139,7 @@ public class HomeFragment extends BaseFragment {
 					}
 				});
 		listView.addHeaderView(headView);
+		homeAdapter.headCount =1;
 		listView.setAdapter(homeAdapter);
 		listView.setOnItemClickListener(homeAdapter);
 		return listView;

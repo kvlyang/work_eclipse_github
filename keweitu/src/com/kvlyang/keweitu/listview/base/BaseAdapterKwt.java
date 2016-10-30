@@ -36,6 +36,7 @@ public abstract class BaseAdapterKwt<ITEMBEANTYPE> extends BaseAdapter
 	BaseHolder<Integer> loadMoreHolder = new LoadMoreHolder();
 	public int loadState = LoadMoreHolder.STATE_clickupdate;;
 	boolean hasLoadMoreFlag = true;
+	public int headCount = 0;
 
 	OnCreateHolderListener<ITEMBEANTYPE> onCreateHolderListener;// 监听itemView的创建
 
@@ -66,7 +67,7 @@ public abstract class BaseAdapterKwt<ITEMBEANTYPE> extends BaseAdapter
 		return position;
 	}
 
-	/* ============listView里面可以显示几种viewType====================== */
+	/* ============listView里面可以显示几种viewType ====================== */
 
 	@Override
 	public int getViewTypeCount() {
@@ -126,15 +127,23 @@ public abstract class BaseAdapterKwt<ITEMBEANTYPE> extends BaseAdapter
 	}
 	
 	
-
+/*	
+ * 要考虑加入headView的影响
+ * */
+	
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		
-		if(getItemViewType(position)==ViewType_loadMore){
-			PerformLoadMore();
-		}else {
-			onNormalItemClick(parent,view,position,id);
+		if(position < headCount){
+			
+		}else{
+			position = position -headCount;
+			if(getItemViewType(position)==ViewType_loadMore){
+				PerformLoadMore();
+			}else {
+				onNormalItemClick(parent,view,position,id);
+			}
 		}
+		
 	}
 	
 	public void onNormalItemClick(AdapterView<?> parent, View view, int position,

@@ -46,6 +46,28 @@ public class UIUtils {
 		}
 	}
 	
+	/**安全的执行一个任务*/
+	public static void postTaskSafely(Runnable task) {
+		int curThreadId = android.os.Process.myTid();
+
+		if (curThreadId == getMainThreadId()) {// 如果当前线程是主线程
+			task.run();
+		} else {// 如果当前线程不是主线程
+			getMainThreadHandler().post(task);
+		}
+
+	}
+
+	/**延迟执行任务*/
+	public static void postTaskDelay(Runnable task, int delayMillis) {
+		getMainThreadHandler().postDelayed(task, delayMillis);
+	}
+
+	/**移除任务*/
+	public static void removeTask(Runnable task) {
+		getMainThreadHandler().removeCallbacks(task);
+	}
+	
 	/**
 	 * dip-->px
 	 */

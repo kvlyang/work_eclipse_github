@@ -22,4 +22,20 @@ public class HttpProtocal {
 		return result;
 	
 	}
+	
+	static public String loadHttpData(String key,String arg1,String arg2) throws Exception {
+		
+		String result;
+		HttpUtils httpUtils = new HttpUtils();
+		// String url = "http://10.0.3.2/keweituServer/home.php";
+		
+		String url = UrlUpdate.URLS.BASEURL+"/"+key;
+		RequestParams params = new RequestParams();
+		params.addQueryStringParameter(arg1, arg2);
+		ResponseStream stream = httpUtils.sendSync(HttpMethod.GET, url,
+				params);
+		result = stream.readString();
+		return result;
+	
+	}
 }

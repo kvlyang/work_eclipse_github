@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.kvlyang.keweitu.bean.CategoryBean;
 import com.kvlyang.keweitu.fragment.base.BaseFragment;
@@ -35,7 +36,7 @@ public class CategoryFragment extends BaseFragment {
 		//SystemClock.sleep(3000);
 		LoadedDataAndView dataView = new LoadedDataAndView();
 		String result = CacheDataLoad.loadDataFromFile("category", 0);
-		Log.e("keweitubug",">>>cache "+ result);
+	//	Log.e("keweitubug",">>>cache "+ result);
 		if( result == null){
 			dataView.state = LoadedResult.UPDATE;
 			dataView.data = null;
@@ -43,7 +44,7 @@ public class CategoryFragment extends BaseFragment {
 		}else{
 			Category Category = new Category();
 			Category.mDatas = jsonCategory(result);
-			Log.e("keweitubug",">>>cache size "+ Category.mDatas.size());
+		//	Log.e("keweitubug",">>>cache size "+ Category.mDatas.size());
 			dataView.state = LoadedResult.UPDATE;
 			dataView.data = Category;
 			return dataView;
@@ -69,7 +70,7 @@ public class CategoryFragment extends BaseFragment {
 		try {
 			// 解析json网络数据
 			result =  HttpProtocal.loadHttpData("category",0);
-			Log.e("keweitubug",">>>http "+ result);
+		//	Log.e("keweitubug",">>>http "+ result);
 			List<CategoryBean> categoryBeans = jsonCategory(result);
 			// 异常处理，显示网络异常界面或缓存
 			if (categoryBeans == null) {
@@ -145,7 +146,7 @@ public class CategoryFragment extends BaseFragment {
 		List<CategoryBean> list = new ArrayList<CategoryBean>();
 		try {
 			JSONArray rootJsonArray = new JSONArray(json);
-			Log.e("keweitubug",">>>cache rootJsonArray.length() "+ rootJsonArray.length());
+		//	Log.e("keweitubug",">>>cache rootJsonArray.length() "+ rootJsonArray.length());
 			for (int i = 0; i < rootJsonArray.length(); i++) {
 				JSONObject itemJson = rootJsonArray.getJSONObject(i);
 				String title;
@@ -188,7 +189,7 @@ public class CategoryFragment extends BaseFragment {
 
 		public void onNormalItemClick(AdapterView<?> parent, View view, int position,
 				long id){
-			
+			Toast.makeText(UIUtils.getContext(), position+"", Toast.LENGTH_SHORT).show();
 		}
 		
 

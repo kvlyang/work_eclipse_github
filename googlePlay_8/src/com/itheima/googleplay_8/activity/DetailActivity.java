@@ -1,8 +1,6 @@
 package com.itheima.googleplay_8.activity;
 
-import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -142,8 +140,9 @@ public class DetailActivity extends BaseActivity {
 		// 填充内容
 		// 1.信息部分
 		AppDetailInfoHolder appDetailInfoHolder = new AppDetailInfoHolder();
-		mContainerInfo.addView(appDetailInfoHolder.getHolderView());
 		appDetailInfoHolder.setDataAndRefreshHolderView(mData);
+		mContainerInfo.addView(appDetailInfoHolder.getHolderView());
+		
 
 		// 2.安全部分
 		AppDetailSafeHolder appDetailSafeHolder = new AppDetailSafeHolder();

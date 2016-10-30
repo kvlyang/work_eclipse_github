@@ -3,15 +3,19 @@ package com.kvlyang.keweitu.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.NetworkInfo.DetailedState;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.kvlyang.keweitu.Activity.AppInfoActivity;
 import com.kvlyang.keweitu.bean.AppInfoBean;
 import com.kvlyang.keweitu.bean.HomeBean;
 import com.kvlyang.keweitu.fragment.base.BaseFragment;
@@ -154,10 +158,19 @@ public class HomeFragment extends BaseFragment {
 
 		public void onNormalItemClick(AdapterView<?> parent, View view, int position,
 				long id){
+		//	Toast.makeText(UIUtils.getContext(), mListData.get(position).packageName, Toast.LENGTH_SHORT).show();
+			goToDetailActivity(mListData.get(position).packageName);
 			
 		}
 		
 
+
+		private void goToDetailActivity(String packageName) {
+			Intent intent = new Intent(UIUtils.getContext(), AppInfoActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.putExtra("packageName", packageName);
+			UIUtils.getContext().startActivity(intent);
+		}
 
 		@Override
 		public List<AppInfoBean> OnLoadMore() throws Exception {

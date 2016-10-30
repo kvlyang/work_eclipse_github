@@ -19,6 +19,17 @@ public class UIUtils {
 		return getResource().getString(resId);
 	}
 	
+	/**得到String.xml中的字符串,带占位符*/
+	public static String getString(int id, Object... formatArgs) {
+		return getResource().getString(id, formatArgs);
+	}
+
+	/**得到String.xml中的字符串数组*/
+	public static String[] getStringArr(int resId) {
+		return getResource().getStringArray(resId);
+	}
+
+	
 	public static String[] getStringArray(int resId){
 		return getResource().getStringArray(resId);
 	}

@@ -1,4 +1,4 @@
-/*package com.kvlyang.keweitu.holder;
+package com.kvlyang.keweitu.holder;
 
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -8,17 +8,16 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.itheima.googleplay_8.R;
-import com.itheima.googleplay_8.base.BaseHolder;
-import com.itheima.googleplay_8.bean.AppInfoBean;
-import com.itheima.googleplay_8.utils.UIUtils;
+
+import com.kvlyang.keweitu.R;
+import com.kvlyang.keweitu.bean.AppDetailBean;
+import com.kvlyang.keweitu.listview.base.BaseHolder;
+import com.kvlyang.keweitu.utils.UIUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.Animator.AnimatorListener;
-import com.nineoldandroids.animation.ObjectAnimator;
 
-*//**
+
+/**
  * @author  Administrator
  * @time 	2015-7-19 上午11:05:30
  * @des	TODO
@@ -27,8 +26,8 @@ import com.nineoldandroids.animation.ObjectAnimator;
  * @updateAuthor $Author: admin $
  * @updateDate $Date: 2015-07-19 15:56:38 +0800 (星期日, 19 七月 2015) $
  * @updateDes TODO
- *//*
-public class AppDetailDesHolder extends BaseHolder<AppInfoBean> implements OnClickListener {
+ */
+public class AppDetailDesHolder extends BaseHolder<AppDetailBean>  {
 	@ViewInject(R.id.app_detail_des_tv_author)
 	TextView			mTvAuthor;
 
@@ -40,18 +39,18 @@ public class AppDetailDesHolder extends BaseHolder<AppInfoBean> implements OnCli
 	private boolean		isOpen	= true;
 	private int			mTvDesMeasuredHeight;
 
-	private AppInfoBean	mData;
+	private AppDetailBean	mData;
 
 	@Override
 	public View initHolderView() {
 		View view = View.inflate(UIUtils.getContext(), R.layout.item_app_detail_des, null);
 		ViewUtils.inject(this, view);
-		view.setOnClickListener(this);
+	//	view.setOnClickListener(this);
 		return view;
 	}
 
 	@Override
-	public void refreshHolderView(AppInfoBean data) {
+	public void refreshHolderView(AppDetailBean data) {
 		mData = data;
 
 		mTvAuthor.setText(data.author);
@@ -63,7 +62,7 @@ public class AppDetailDesHolder extends BaseHolder<AppInfoBean> implements OnCli
 			public void onGlobalLayout() {
 				mTvDesMeasuredHeight = mTvDes.getMeasuredHeight();
 				// 默认折叠
-				toggle(false);
+		//		toggle(false);
 				// 如果不移除,一会高度变成7行的时候.mTvDesMeasuredHeight就会变
 				mTvDes.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 			}
@@ -71,7 +70,7 @@ public class AppDetailDesHolder extends BaseHolder<AppInfoBean> implements OnCli
 
 	}
 
-	@Override
+	/*@Override
 	public void onClick(View v) {
 		toggle(true);
 	}
@@ -157,7 +156,7 @@ public class AppDetailDesHolder extends BaseHolder<AppInfoBean> implements OnCli
 	 * @param data 指定textView的内容
 	 * @return
 	 *//*
-	private int getShortHeight(int i, AppInfoBean data) {
+	private int getShortHeight(int i, AppDetailBean data) {
 		//临时textView,只做测绘用
 		TextView tempTextView = new TextView(UIUtils.getContext());
 		tempTextView.setLines(7);
@@ -168,7 +167,6 @@ public class AppDetailDesHolder extends BaseHolder<AppInfoBean> implements OnCli
 		int measuredHeight = tempTextView.getMeasuredHeight();
 
 		return measuredHeight;
-	}
+	}*/
 
 }
-*/

@@ -1,18 +1,21 @@
-/*package com.kvlyang.keweitu.holder;
+package com.kvlyang.keweitu.holder;
 
 import java.io.File;
 
+import android.app.DownloadManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-
+import com.kvlyang.keweitu.R;
 import com.kvlyang.keweitu.bean.AppDetailBean;
 import com.kvlyang.keweitu.listview.base.BaseHolder;
+import com.kvlyang.keweitu.utils.UIUtils;
+import com.kvlyang.keweitu.views.ProgressButton;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 
-*//**
+/**
  * @author  Administrator
  * @time 	2015-7-19 上午11:05:30
  * @des	TODO
@@ -21,35 +24,34 @@ import com.lidroid.xutils.view.annotation.ViewInject;
  * @updateAuthor $Author: admin $
  * @updateDate $Date: 2015-07-20 14:40:50 +0800 (星期一, 20 七月 2015) $
  * @updateDes TODO
- *//*
-public class AppDetailBottomHolder extends BaseHolder<AppDetailBean> implements OnClickListener {
+ */
+public class AppDetailBottomHolder extends BaseHolder<AppDetailBean>{
 	@ViewInject(R.id.app_detail_download_btn_share)
 	Button				mBtnShare;
 	@ViewInject(R.id.app_detail_download_btn_favo)
 	Button				mBtnFavo;
 	@ViewInject(R.id.app_detail_download_btn_download)
 	ProgressButton		mProgressButton;
-	private AppInfoBean	mData;
+	private AppDetailBean	mData;
 
 	@Override
 	public View initHolderView() {
 		View view = View.inflate(UIUtils.getContext(), R.layout.item_app_detail_bottom, null);
 		ViewUtils.inject(this, view);
-		mBtnShare.setOnClickListener(this);
-		mBtnFavo.setOnClickListener(this);
-		mProgressButton.setOnClickListener(this);
+
+	//	mProgressButton.setOnClickListener(this);
 		return view;
 	}
 
 	@Override
-	public void refreshHolderView(AppInfoBean data) {
-		mData = data;
+	public void refreshHolderView(AppDetailBean data) {
+	/*	mData = data;
 		=============== 根据不同的状态给用户提示 ===============
 		DownLoadInfo info = DownloadManager.getInstance().getDownLoadInfo(data);
-		refreshProgressBtnUI(info);
+		refreshProgressBtnUI(info);*/
 	}
 
-	public void refreshProgressBtnUI(DownLoadInfo info) {
+	/*	public void refreshProgressBtnUI(DownLoadInfo info) {
 
 		mProgressButton.setBackgroundResource(R.drawable.selector_app_detail_bottom_normal);
 		switch (info.state) {
@@ -231,7 +233,6 @@ public class AppDetailBottomHolder extends BaseHolder<AppDetailBean> implements 
 	public void refreshHolderView(AppDetailBean itemData) {
 		// TODO Auto-generated method stub
 		
-	}
+	}*/
 
 }
-*/

@@ -12,7 +12,11 @@ import com.kvlyang.keweitu.R;
 import com.kvlyang.keweitu.bean.AppDetailBean;
 import com.kvlyang.keweitu.fragment.base.LoadedDataAndView;
 import com.kvlyang.keweitu.fragment.base.LoadingPager;
+import com.kvlyang.keweitu.holder.AppDetailBottomHolder;
+import com.kvlyang.keweitu.holder.AppDetailDesHolder;
 import com.kvlyang.keweitu.holder.AppDetailInfoHolder;
+import com.kvlyang.keweitu.holder.AppDetailPicHolder;
+import com.kvlyang.keweitu.holder.AppDetailSafeHolder;
 import com.kvlyang.keweitu.protocal.HttpProtocal;
 import com.kvlyang.keweitu.utils.UIUtils;
 import com.lidroid.xutils.ViewUtils;
@@ -85,26 +89,38 @@ public class AppInfoActivity extends ActionBarActivity{
 			}
 
 			@Override
-			public View initSuccessView(Object data) {
-				
-				
+			public View initSuccessView(Object data) {		
 				if (data == null || !(data instanceof AppDetailBean)) {
 					return null;
 				}
-				
-				
-				
-				
+						
 				AppDetailBean mData = (AppDetailBean)data;
+				
+				// 填充内容
+				// 1.信息部分
 				AppDetailInfoHolder appDetailInfoHolder = new AppDetailInfoHolder();
-					
-
 				appDetailInfoHolder.setDataAndRefreshHolderView(mData);
-				if(mContainerInfo==null){
-					Log.e("keweituBug", "mContainerInfo==null");
-				}
 				mContainerInfo.addView(appDetailInfoHolder.getHolderView());
 				
+
+				// 2.安全部分
+				AppDetailSafeHolder appDetailSafeHolder = new AppDetailSafeHolder();
+				mContainerSafe.addView(appDetailSafeHolder.getHolderView());
+				appDetailSafeHolder.setDataAndRefreshHolderView(mData);
+
+				// 3.截图部分
+				AppDetailPicHolder appDetailPicHolder = new AppDetailPicHolder();
+				mContainerPic.addView(appDetailPicHolder.getHolderView());
+				appDetailPicHolder.setDataAndRefreshHolderView(mData);
+
+				// 4.描述部分
+				AppDetailDesHolder appDetailDesHolder = new AppDetailDesHolder();
+				mContainerDes.addView(appDetailDesHolder.getHolderView());
+				appDetailDesHolder.setDataAndRefreshHolderView(mData);
+
+				AppDetailBottomHolder mAppDetailBottomHolder = new AppDetailBottomHolder();
+				mContainerBottom.addView(mAppDetailBottomHolder.getHolderView());
+				mAppDetailBottomHolder.setDataAndRefreshHolderView(mData);
 				
 				return view;
 			}

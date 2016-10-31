@@ -1,4 +1,4 @@
-/*package com.kvlyang.keweitu.holder;
+package com.kvlyang.keweitu.holder;
 
 import java.util.List;
 
@@ -10,20 +10,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.itheima.googleplay_8.R;
-import com.itheima.googleplay_8.base.BaseHolder;
-import com.itheima.googleplay_8.bean.AppInfoBean;
-import com.itheima.googleplay_8.bean.AppInfoBean.AppInfoSafeBean;
-import com.itheima.googleplay_8.conf.Constants.URLS;
-import com.itheima.googleplay_8.utils.BitmapHelper;
-import com.itheima.googleplay_8.utils.UIUtils;
+import com.kvlyang.keweitu.R;
+import com.kvlyang.keweitu.bean.AppDetailBean;
+import com.kvlyang.keweitu.listview.base.BaseHolder;
+import com.kvlyang.keweitu.utils.UIUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
-import com.nineoldandroids.animation.ObjectAnimator;
-import com.nineoldandroids.animation.ValueAnimator;
-import com.nineoldandroids.animation.ValueAnimator.AnimatorUpdateListener;
 
-*//**
+/**
  * @author  Administrator
  * @time 	2015-7-19 上午11:05:30
  * @des	TODO
@@ -32,8 +26,8 @@ import com.nineoldandroids.animation.ValueAnimator.AnimatorUpdateListener;
  * @updateAuthor $Author: admin $
  * @updateDate $Date: 2015-07-19 17:01:18 +0800 (星期日, 19 七月 2015) $
  * @updateDes TODO
- *//*
-public class AppDetailSafeHolder extends BaseHolder<AppInfoBean> implements OnClickListener {
+ */
+public class AppDetailSafeHolder extends BaseHolder<AppDetailBean>  {
 	@ViewInject(R.id.app_detail_safe_pic_container)
 	LinearLayout	mContainerPic;
 
@@ -51,13 +45,13 @@ public class AppDetailSafeHolder extends BaseHolder<AppInfoBean> implements OnCl
 		View view = View.inflate(UIUtils.getContext(), R.layout.item_app_detail_safe, null);
 		ViewUtils.inject(this, view);
 
-		view.setOnClickListener(this);
+	//	view.setOnClickListener(this);
 		return view;
 	}
 
 	@Override
-	public void refreshHolderView(AppInfoBean data) {
-		List<AppInfoSafeBean> safeBeans = data.safe;
+	public void refreshHolderView(AppDetailBean data) {
+		/*List<AppInfoSafeBean> safeBeans = data.safe;
 		for (AppInfoSafeBean appInfoSafeBean : safeBeans) {
 			ImageView ivIcon = new ImageView(UIUtils.getContext());
 			BitmapHelper.display(ivIcon, URLS.IMAGEBASEURL + appInfoSafeBean.safeUrl);
@@ -87,12 +81,12 @@ public class AppDetailSafeHolder extends BaseHolder<AppInfoBean> implements OnCl
 
 			mContainerDes.addView(ll);
 
-		}
+		}*/
 		// 默认折叠
-		toggle(false);
+	//	toggle(false);
 	}
 
-	@Override
+	/*@Override
 	public void onClick(View v) {
 		toggle(true);
 	}
@@ -159,7 +153,6 @@ public class AppDetailSafeHolder extends BaseHolder<AppInfoBean> implements OnCl
 				mContainerDes.setLayoutParams(params);
 			}
 		});
-	}
+	}*/
 
 }
-*/

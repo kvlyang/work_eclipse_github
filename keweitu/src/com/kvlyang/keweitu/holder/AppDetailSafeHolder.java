@@ -2,6 +2,9 @@ package com.kvlyang.keweitu.holder;
 
 import java.util.List;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,7 +15,10 @@ import android.widget.TextView;
 
 import com.kvlyang.keweitu.R;
 import com.kvlyang.keweitu.bean.AppDetailBean;
+import com.kvlyang.keweitu.bean.AppDetailBean.AppInfoSafeBean;
+import com.kvlyang.keweitu.conf.Constants.URLS;
 import com.kvlyang.keweitu.listview.base.BaseHolder;
+import com.kvlyang.keweitu.utils.BitmapHelper;
 import com.kvlyang.keweitu.utils.UIUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
@@ -27,7 +33,7 @@ import com.lidroid.xutils.view.annotation.ViewInject;
  * @updateDate $Date: 2015-07-19 17:01:18 +0800 (星期日, 19 七月 2015) $
  * @updateDes TODO
  */
-public class AppDetailSafeHolder extends BaseHolder<AppDetailBean>  {
+public class AppDetailSafeHolder extends BaseHolder<AppDetailBean> implements OnClickListener {
 	@ViewInject(R.id.app_detail_safe_pic_container)
 	LinearLayout	mContainerPic;
 
@@ -45,13 +51,13 @@ public class AppDetailSafeHolder extends BaseHolder<AppDetailBean>  {
 		View view = View.inflate(UIUtils.getContext(), R.layout.item_app_detail_safe, null);
 		ViewUtils.inject(this, view);
 
-	//	view.setOnClickListener(this);
+		view.setOnClickListener(this);
 		return view;
 	}
 
 	@Override
 	public void refreshHolderView(AppDetailBean data) {
-		/*List<AppInfoSafeBean> safeBeans = data.safe;
+		List<AppInfoSafeBean> safeBeans = data.safe;
 		for (AppInfoSafeBean appInfoSafeBean : safeBeans) {
 			ImageView ivIcon = new ImageView(UIUtils.getContext());
 			BitmapHelper.display(ivIcon, URLS.IMAGEBASEURL + appInfoSafeBean.safeUrl);
@@ -81,12 +87,12 @@ public class AppDetailSafeHolder extends BaseHolder<AppDetailBean>  {
 
 			mContainerDes.addView(ll);
 
-		}*/
+		}
 		// 默认折叠
-	//	toggle(false);
+		toggle(false);
 	}
 
-	/*@Override
+	@Override
 	public void onClick(View v) {
 		toggle(true);
 	}
@@ -94,10 +100,10 @@ public class AppDetailSafeHolder extends BaseHolder<AppDetailBean>  {
 	private void toggle(boolean isAnimation) {
 		if (isOpen) {// 折叠
 
-			*//**
+			/**
 			 mContainerDes高度发生变化
 			 应有的高度-->0
-			 *//*
+			 */
 
 			mContainerDes.measure(0, 0);
 			int measuredHeight = mContainerDes.getMeasuredHeight();
@@ -111,10 +117,10 @@ public class AppDetailSafeHolder extends BaseHolder<AppDetailBean>  {
 				mContainerDes.setLayoutParams(params);
 			}
 		} else {// 展开
-			*//**
+			/**
 			 mContainerDes高度发生变化
 			 0-->应有的高度
-			 *//*
+			 */
 			mContainerDes.measure(0, 0);
 			int measuredHeight = mContainerDes.getMeasuredHeight();
 			int end = measuredHeight;// 动画的开始高度
@@ -153,6 +159,6 @@ public class AppDetailSafeHolder extends BaseHolder<AppDetailBean>  {
 				mContainerDes.setLayoutParams(params);
 			}
 		});
-	}*/
+	}
 
 }

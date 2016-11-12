@@ -40,7 +40,7 @@
         <com.kvlyang.keweitu.views.ProgressButton
             android:id="@+id/app_detail_download_btn_download"
             android:layout_width="match_parent"
-            android:layout_height="38dp"
+            android:layout_height="45dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"

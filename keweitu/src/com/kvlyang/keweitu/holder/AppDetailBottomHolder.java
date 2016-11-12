@@ -2,7 +2,6 @@ package com.kvlyang.keweitu.holder;
 
 import java.io.File;
 
-import android.app.DownloadManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -10,6 +9,11 @@ import android.widget.Button;
 import com.kvlyang.keweitu.R;
 import com.kvlyang.keweitu.bean.AppDetailBean;
 import com.kvlyang.keweitu.listview.base.BaseHolder;
+import com.kvlyang.keweitu.manager.DownLoadInfo;
+import com.kvlyang.keweitu.manager.DownloadManager;
+import com.kvlyang.keweitu.manager.DownloadManager.DownLoadObserver;
+import com.kvlyang.keweitu.utils.CommonUtils;
+import com.kvlyang.keweitu.utils.PrintDownLoadInfo;
 import com.kvlyang.keweitu.utils.UIUtils;
 import com.kvlyang.keweitu.views.ProgressButton;
 import com.lidroid.xutils.ViewUtils;
@@ -25,7 +29,7 @@ import com.lidroid.xutils.view.annotation.ViewInject;
  * @updateDate $Date: 2015-07-20 14:40:50 +0800 (星期一, 20 七月 2015) $
  * @updateDes TODO
  */
-public class AppDetailBottomHolder extends BaseHolder<AppDetailBean>{
+public class AppDetailBottomHolder extends BaseHolder<AppDetailBean> implements OnClickListener,DownLoadObserver{
 	@ViewInject(R.id.app_detail_download_btn_share)
 	Button				mBtnShare;
 	@ViewInject(R.id.app_detail_download_btn_favo)
@@ -39,23 +43,24 @@ public class AppDetailBottomHolder extends BaseHolder<AppDetailBean>{
 		View view = View.inflate(UIUtils.getContext(), R.layout.item_app_detail_bottom, null);
 		ViewUtils.inject(this, view);
 
-	//	mProgressButton.setOnClickListener(this);
+		mProgressButton.setOnClickListener(this);
 		return view;
 	}
 
 	@Override
 	public void refreshHolderView(AppDetailBean data) {
-	/*	mData = data;
-		=============== 根据不同的状态给用户提示 ===============
+		mData = data;
+		//=============== 根据不同的状态给用户提示 ===============
 		DownLoadInfo info = DownloadManager.getInstance().getDownLoadInfo(data);
-		refreshProgressBtnUI(info);*/
+		addObserverAndRerefresh();
+		refreshProgressBtnUI(info);
 	}
 
-	/*	public void refreshProgressBtnUI(DownLoadInfo info) {
+		public void refreshProgressBtnUI(DownLoadInfo info) {
 
 		mProgressButton.setBackgroundResource(R.drawable.selector_app_detail_bottom_normal);
 		switch (info.state) {
-		*//**
+		/**
 		 状态(编程记录)  	|  给用户的提示(ui展现)   
 		----------------|----------------------
 		未下载			|下载				    
@@ -65,7 +70,7 @@ public class AppDetailBottomHolder extends BaseHolder<AppDetailBean>{
 		下载失败 			|重试					 
 		下载完成 			|安装					 
 		已安装 			|打开					 
-		 *//*
+		 */
 		case DownloadManager.STATE_UNDOWNLOAD:// 未下载
 			mProgressButton.setText("下载");
 			break;
@@ -107,7 +112,7 @@ public class AppDetailBottomHolder extends BaseHolder<AppDetailBean>{
 			DownLoadInfo info = DownloadManager.getInstance().getDownLoadInfo(mData);
 
 			switch (info.state) {
-			*//**
+			/**
 			状态(编程记录)     | 用户行为(触发操作) 
 			----------------| -----------------
 			未下载			| 去下载
@@ -117,7 +122,7 @@ public class AppDetailBottomHolder extends BaseHolder<AppDetailBean>{
 			下载失败 			| 重试下载
 			下载完成 			| 安装应用
 			已安装 			| 打开应用
-			 *//*
+			 */
 			case DownloadManager.STATE_UNDOWNLOAD:// 未下载
 				doDownLoad(info);
 				break;
@@ -150,48 +155,48 @@ public class AppDetailBottomHolder extends BaseHolder<AppDetailBean>{
 		}
 	}
 
-	*//**
+	/**
 	 * 打开应用
 	 * @param info
-	 *//*
+	 */
 	private void openApk(DownLoadInfo info) {
 		CommonUtils.openApp(UIUtils.getContext(), info.packageName);
 	}
 
-	*//**
+	/**
 	 * 安装应用
 	 * @param info
-	 *//*
+	 */
 	private void installApk(DownLoadInfo info) {
 		File apkFile = new File(info.savePath);
 		CommonUtils.installApp(UIUtils.getContext(), apkFile);
 	}
 
-	*//**
+	/**
 	 * 取消下载
 	 * @param info
-	 *//*
+	 */
 	private void cancelDownLoad(DownLoadInfo info) {
 		DownloadManager.getInstance().cancel(info);
 
 	}
 
-	*//**
+	/**
 	 * 暂停下载
 	 * @param info
-	 *//*
+	 */
 	private void pauseDownLoad(DownLoadInfo info) {
 		DownloadManager.getInstance().pause(info);
 	}
 
-	*//**
+	/**
 	 * 开始下载
 	 * @param info
-	 *//*
+	 */
 	private void doDownLoad(DownLoadInfo info) {
-		=============== 根据不同的状态触发不同的操作 ===============
+	//	=============== 根据不同的状态触发不同的操作 ===============
 		// 下载apk放置的目录
-		String dir = FileUtils.getDir("download");// sdcard/android/data/包名/download
+	/*	String dir = FileUtils.getDir("download");// sdcard/android/data/包名/download
 		File file = new File(dir, mData.packageName + ".apk");// sdcard/android/data/包名/download/com.itheima.www.apk
 		// 保存路径
 		String savePath = file.getAbsolutePath();// sdcard/android/data/包名/download/com.itheima.www.apk
@@ -199,12 +204,12 @@ public class AppDetailBottomHolder extends BaseHolder<AppDetailBean>{
 		DownLoadInfo info = new DownLoadInfo();
 		info.savePath = savePath;
 		info.downloadUrl = mData.downloadUrl;
-		info.packageName = mData.packageName;
+		info.packageName = mData.packageName;*/
 
 		DownloadManager.getInstance().downLoad(info);
 	}
 
-	=============== 收到数据改变,更新ui ===============
+//	=============== 收到数据改变,更新ui ===============
 	@Override
 	public void onDownLoadInfoChange(final DownLoadInfo info) {
 		// 过滤DownLoadInfo
@@ -229,10 +234,8 @@ public class AppDetailBottomHolder extends BaseHolder<AppDetailBean>{
 		// refreshProgressBtnUI(downLoadInfo);//方式二
 	}
 
-	@Override
-	public void refreshHolderView(AppDetailBean itemData) {
-		// TODO Auto-generated method stub
-		
-	}*/
+
+
+
 
 }

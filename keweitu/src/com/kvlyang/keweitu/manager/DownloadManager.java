@@ -1,4 +1,4 @@
-package com.itheima.googleplay_8.manager;
+package com.kvlyang.keweitu.manager;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -7,13 +7,14 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import com.itheima.googleplay_8.bean.AppInfoBean;
-import com.itheima.googleplay_8.conf.Constants.URLS;
-import com.itheima.googleplay_8.factory.ThreadPoolFactory;
-import com.itheima.googleplay_8.utils.CommonUtils;
-import com.itheima.googleplay_8.utils.FileUtils;
-import com.itheima.googleplay_8.utils.IOUtils;
-import com.itheima.googleplay_8.utils.UIUtils;
+
+import com.kvlyang.keweitu.bean.AppDetailBean;
+import com.kvlyang.keweitu.conf.UrlUpdate.URLS;
+import com.kvlyang.keweitu.factory.ThreadPoolFactory;
+import com.kvlyang.keweitu.utils.CommonUtils;
+import com.kvlyang.keweitu.utils.FileUtils;
+import com.kvlyang.keweitu.utils.IOUtils;
+import com.kvlyang.keweitu.utils.UIUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseStream;
@@ -172,7 +173,7 @@ public class DownloadManager {
 	 * @des 暴露当前状态,也就是需要提供downLoadInfo
 	 * @call 外界需要知道最新的state的时候
 	 */
-	public DownLoadInfo getDownLoadInfo(AppInfoBean data) {
+	public DownLoadInfo getDownLoadInfo(AppDetailBean data) {
 		// 已安装
 		if (CommonUtils.isInstalled(UIUtils.getContext(), data.packageName)) {
 			DownLoadInfo info = generateDownLoadInfo(data);
@@ -208,7 +209,7 @@ public class DownloadManager {
 	/**
 	 * 根据AppInfoBean生成一个DownLoadInfo,进行一些常规的赋值,也就是对一些常规属性赋值(除了state之外的属性)
 	 */
-	public DownLoadInfo generateDownLoadInfo(AppInfoBean data) {
+	public DownLoadInfo generateDownLoadInfo(AppDetailBean data) {
 		String dir = FileUtils.getDir("download");// sdcard/android/data/包名/download
 		File file = new File(dir, data.packageName + ".apk");// sdcard/android/data/包名/download/com.itheima.www.apk
 		// 保存路径

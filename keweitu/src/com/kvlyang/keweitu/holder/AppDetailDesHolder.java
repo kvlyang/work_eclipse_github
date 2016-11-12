@@ -1,5 +1,8 @@
 package com.kvlyang.keweitu.holder;
 
+import android.animation.Animator;
+import android.animation.Animator.AnimatorListener;
+import android.animation.ObjectAnimator;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewParent;
@@ -27,7 +30,7 @@ import com.lidroid.xutils.view.annotation.ViewInject;
  * @updateDate $Date: 2015-07-19 15:56:38 +0800 (星期日, 19 七月 2015) $
  * @updateDes TODO
  */
-public class AppDetailDesHolder extends BaseHolder<AppDetailBean>  {
+public class AppDetailDesHolder extends BaseHolder<AppDetailBean> implements OnClickListener {
 	@ViewInject(R.id.app_detail_des_tv_author)
 	TextView			mTvAuthor;
 
@@ -45,7 +48,7 @@ public class AppDetailDesHolder extends BaseHolder<AppDetailBean>  {
 	public View initHolderView() {
 		View view = View.inflate(UIUtils.getContext(), R.layout.item_app_detail_des, null);
 		ViewUtils.inject(this, view);
-	//	view.setOnClickListener(this);
+		view.setOnClickListener(this);
 		return view;
 	}
 
@@ -62,7 +65,7 @@ public class AppDetailDesHolder extends BaseHolder<AppDetailBean>  {
 			public void onGlobalLayout() {
 				mTvDesMeasuredHeight = mTvDes.getMeasuredHeight();
 				// 默认折叠
-		//		toggle(false);
+				toggle(false);
 				// 如果不移除,一会高度变成7行的时候.mTvDesMeasuredHeight就会变
 				mTvDes.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 			}
@@ -70,7 +73,7 @@ public class AppDetailDesHolder extends BaseHolder<AppDetailBean>  {
 
 	}
 
-	/*@Override
+	@Override
 	public void onClick(View v) {
 		toggle(true);
 	}
@@ -78,10 +81,10 @@ public class AppDetailDesHolder extends BaseHolder<AppDetailBean>  {
 	private void toggle(boolean isAnimation) {
 		if (isOpen) {// 折叠
 
-			*//**
+			/**
 			 mTvDes高度发生改变
 			 应有的高度-->7行的高度
-			 *//*
+			 */
 			int start = mTvDesMeasuredHeight;
 			int end = getShortHeight(7, mData);
 			if (isAnimation) {
@@ -151,11 +154,11 @@ public class AppDetailDesHolder extends BaseHolder<AppDetailBean>  {
 		});
 	}
 
-	*//**
+	/**
 	 * @param i 指定行高
 	 * @param data 指定textView的内容
 	 * @return
-	 *//*
+	 */
 	private int getShortHeight(int i, AppDetailBean data) {
 		//临时textView,只做测绘用
 		TextView tempTextView = new TextView(UIUtils.getContext());
@@ -167,6 +170,6 @@ public class AppDetailDesHolder extends BaseHolder<AppDetailBean>  {
 		int measuredHeight = tempTextView.getMeasuredHeight();
 
 		return measuredHeight;
-	}*/
+	}
 
 }
